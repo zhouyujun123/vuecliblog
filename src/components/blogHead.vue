@@ -4,13 +4,9 @@
       <p class="fl">一个博客</p>
       <ul class="fl">
         <router-link to="/">
-          <li class="fl">
-            <i class="zyjFamily">&#xe74b;</i>首页
-          </li>
+          <li class="fl"><i class="zyjFamily">&#xe74b;</i>首页</li>
         </router-link>
-        <li class="fl">
-          <i class="zyjFamily">&#xe601;</i>APP
-        </li>
+        <li class="fl"><i class="zyjFamily">&#xe601;</i>APP</li>
       </ul>
       <div class="search fl">
         <div class="search_bgc">

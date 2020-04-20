@@ -12,19 +12,16 @@
           tag="div"
           :class="{ 'activeOption': $route.meta.active === '/blogWrite/works' }"
         >
-          <div class="option">
-            <i class="zyjFamily">&#xe615;</i>我的文章
-          </div>
+          <div class="option"><i class="zyjFamily">&#xe615;</i>我的文章</div>
         </router-link>
         <router-link
           to="/blogWrite/collectedWorks"
           tag="div"
           :class="{
-              'activeOption': $route.meta.active === '/blogWrite/collectedWorks'}"
+            activeOption: $route.meta.active === '/blogWrite/collectedWorks'
+          }"
         >
-          <div class="option">
-            <i class="zyjFamily">&#xe610;</i>我的文集
-          </div>
+          <div class="option"><i class="zyjFamily">&#xe610;</i>我的文集</div>
         </router-link>
       </div>
       <button>返回首页</button>

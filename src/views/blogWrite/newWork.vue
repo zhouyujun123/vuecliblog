@@ -7,8 +7,16 @@
           <span>{{ corpusName }}</span>
         </div>
         <div class="newWorkName">
-          <input class="fir" type="text" placeholder="给你的新文章取个名字吧！" />
-          <input class="sen" type="text" placeholder="简单介绍你要写些什么..." />
+          <input
+            class="fir"
+            type="text"
+            placeholder="给你的新文章取个名字吧！"
+          />
+          <input
+            class="sen"
+            type="text"
+            placeholder="简单介绍你要写些什么..."
+          />
         </div>
         <quill-editor
           v-model="content"

@@ -11,7 +11,12 @@
         </div>
       </div>
       <div class="add-collectde">
-        <input @keyup.enter="addNewWork()" type="text" placeholder="请输入新的文集标题" v-model="newWork" />
+        <input
+          @keyup.enter="addNewWork()"
+          type="text"
+          placeholder="请输入新的文集标题"
+          v-model="newWork"
+        />
         <button @click="addNewWork()">新文集</button>
       </div>
       <div class="collectde-table">
@@ -37,7 +42,11 @@
             <td>{{ item.workTime | dateFormat() }}</td>
             <td>{{ item.workNum }}</td>
             <td>
-              <i class="zyjFamily deleteIcon" @click.prevent="handleDeleteItem(item.id)">&#xe614;</i>
+              <i
+                class="zyjFamily deleteIcon"
+                @click.prevent="handleDeleteItem(item.id)"
+                >&#xe614;</i
+              >
             </td>
           </tr>
         </table>

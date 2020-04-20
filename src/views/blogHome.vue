@@ -10,7 +10,9 @@
             <div class="the_article">
               <div class="article_left fl">
                 <p>我的一天</p>
-                <p>文章内容文文章内容文章内容文内容章内容文文章内容文章内容文章内容</p>
+                <p>
+                  文章内容文文章内容文章内容文内容章内容文文章内容文章内容文章内容
+                </p>
                 <p>
                   <span>笔者：</span>
                   <span class="con">zyj</span>

@@ -32,7 +32,11 @@
             v-for="(item, index) in searchWorks(search)"
             :key="index"
             >-->
-            <tr class="body" v-for="(item, index) in searchWorks(search)" :key="index">
+            <tr
+              class="body"
+              v-for="(item, index) in searchWorks(search)"
+              :key="index"
+            >
               <td>
                 <div class="collectde-line">
                   <i class="zyjFamily">&#xe615;</i>
@@ -42,7 +46,11 @@
               <td>{{ item.workTime }}</td>
               <td>{{ item.workState }}</td>
               <td>
-                <i class="zyjFamily deleteIcon" @click="handleDeleteItem(item.id)">&#xe614;</i>
+                <i
+                  class="zyjFamily deleteIcon"
+                  @click="handleDeleteItem(item.id)"
+                  >&#xe614;</i
+                >
               </td>
             </tr>
             <!-- </router-link> -->

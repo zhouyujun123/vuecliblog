@@ -23,15 +23,9 @@
             天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
           </p>
           <div class="art-bom">
-            <span>
-              <i class="zyjFamily">&#xe60c;</i>12334
-            </span>
-            <span>
-              <i class="zyjFamily">&#xe7d0;</i>123123
-            </span>
-            <span>
-              <i class="zyjFamily">&#xe612;</i>123456
-            </span>
+            <span> <i class="zyjFamily">&#xe60c;</i>12334 </span>
+            <span> <i class="zyjFamily">&#xe7d0;</i>123123 </span>
+            <span> <i class="zyjFamily">&#xe612;</i>123456 </span>
           </div>
         </div>
         <div class="blog-comment">
@@ -55,7 +49,9 @@
               <div class="building-owner">
                 <p class="building-person">回复人的名字</p>
                 <p class="building-time">2019-02-02 00:00:00</p>
-                <p class="building-con">是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。</p>
+                <p class="building-con">
+                  是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。
+                </p>
                 <p class="building-bom">
                   <span>
                     <i class="zyjFamily">&#xe60c;</i>
@@ -74,7 +70,9 @@
                       <p class="inside-time">2019-02-02 00:00:00</p>
                     </div>
                   </div>
-                  <p class="inside-con">是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。</p>
+                  <p class="inside-con">
+                    是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。
+                  </p>
                   <p class="inside-bom">
                     <span>
                       <i class="zyjFamily">&#xe60c;</i>
@@ -112,19 +110,27 @@
           </div>
           <div class="line-works"></div>
           <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
+            <p class="work-name">
+              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
+            </p>
             <p class="work-read">阅读量111222</p>
           </div>
           <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
+            <p class="work-name">
+              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
+            </p>
             <p class="work-read">阅读量111222</p>
           </div>
           <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
+            <p class="work-name">
+              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
+            </p>
             <p class="work-read">阅读量111222</p>
           </div>
           <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
+            <p class="work-name">
+              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
+            </p>
             <p class="work-read">阅读量111222</p>
           </div>
         </div>
