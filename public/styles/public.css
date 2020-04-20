@@ -1,0 +1,48 @@
+button,
+input {
+  border: none;
+  appearance: none;
+  outline: none;
+}
+body {
+  min-width: 1400px;
+}
+body,
+p,
+ul {
+  padding: 0;
+  margin: 0;
+}
+ul,
+li {
+  list-style: none;
+}
+
+.count {
+  width: 1400px;
+  margin: 0 auto;
+}
+
+.counter {
+  width: 960px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.myCounter {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+/* 富文本编辑器样式 */
+.ql-editor {
+  height: 470px !important;
+}
