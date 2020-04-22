@@ -91,7 +91,7 @@ export default {
     saveHtml() {
       console.log(this.content);
       this.$axios
-        .get("localhost:8090/add?id=1", {
+        .get("localhost:8090/add", {
           params: {
             id: 1
           }

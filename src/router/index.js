@@ -4,8 +4,7 @@ import blogHome from "../views/blogHome.vue";
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
+const routes = [{
     path: "/",
     name: "blogHome",
     component: blogHome,
@@ -57,12 +56,11 @@ const routes = [
     path: "/blogWrite",
     name: "blogWrite",
     component: () => import("../views/blogWrite/blogWrite.vue"),
-    redirect: "/blogWrite/collectedWorks",
+    redirect: "/blogWrite/works",
     meta: {
       title: "发布文章-left"
     },
-    children: [
-      {
+    children: [{
         path: "collectedWorks",
         name: "collectedWorks",
         component: () => import("../components/blogWrite/collectedWorks.vue"),
@@ -100,6 +98,43 @@ const routes = [
       active: "/blogWrite/collectedWorks",
       title: "文集中的文章详情"
     }
+  },
+  {
+    path: "/blogSearch",
+    name: "blogSearch",
+    component: () => import("../views/blogSearch.vue"),
+    meta: {
+      title: "博客搜索"
+    },
+    redirect: "/blogSearch/searchUsers",
+    children: [{
+        path: "searchUsers",
+        name: "searchUsers",
+        component: () => import("../components/blogSearch/searchUsers.vue"),
+        meta: {
+          active: "/blogSearch/searchUsers",
+          title: "搜索用户"
+        }
+      },
+      {
+        path: "searchWorks",
+        name: "searchWorks",
+        component: () => import("../components/blogSearch/searchWorks.vue"),
+        meta: {
+          active: "/blogSearch/searchWorks",
+          title: "搜索文章"
+        }
+      },
+      {
+        path: "searchCorpus",
+        name: "searchCorpus",
+        component: () => import("../components/blogSearch/searchCorpus.vue"),
+        meta: {
+          active: "/blogSearch/searchCorpus",
+          title: "搜索文集"
+        }
+      }
+    ]
   }
 ];
 
