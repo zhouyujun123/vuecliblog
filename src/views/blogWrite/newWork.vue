@@ -7,16 +7,8 @@
           <span>{{ corpusName }}</span>
         </div>
         <div class="newWorkName">
-          <input
-            class="fir"
-            type="text"
-            placeholder="给你的新文章取个名字吧！"
-          />
-          <input
-            class="sen"
-            type="text"
-            placeholder="简单介绍你要写些什么..."
-          />
+          <input class="fir" type="text" placeholder="给你的新文章取个名字吧！" v-model="workName" />
+          <input class="sen" type="text" placeholder="简单介绍你要写些什么..." v-model="introduce" />
         </div>
         <quill-editor
           v-model="content"
@@ -52,7 +44,13 @@ export default {
   },
   data() {
     return {
+      // 文集名称
       corpusName: "",
+      // 文章名称
+      workName: "",
+      // 文章介绍
+      introduce: "",
+      // 文章美容
       content: `<p>写一个精彩的故事吧...</p>`,
       editorOption: {
         modules: {
@@ -92,6 +90,18 @@ export default {
     }, // 内容改变事件
     saveHtml() {
       console.log(this.content);
+      this.$axios
+        .get("localhost:8090/add?id=1", {
+          params: {
+            id: 1
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
@@ -107,9 +117,14 @@ export default {
   padding-left: 260px;
   background-color: #f5f5f5;
   box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
   .gundong {
-    height: 680px;
+    height: 100%;
     // overflow-y: scroll;
     background-color: #fff;
     border-radius: 10px;

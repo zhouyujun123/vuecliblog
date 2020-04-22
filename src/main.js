@@ -6,6 +6,9 @@ import store from "./store";
 import "./assets/icon/iconfont.css";
 // 公共样式文件
 import "../public/styles/public.css";
+// axios全局引入
+import axios from "axios";
+Vue.prototype.$axios = axios;
 
 Vue.config.productionTip = false;
 

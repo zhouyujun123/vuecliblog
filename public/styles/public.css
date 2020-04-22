@@ -43,6 +43,9 @@ li {
 }
 
 /* 富文本编辑器样式 */
-.ql-editor {
+/* .ql-editor {
   height: 470px !important;
+} */
+.quill-editor{
+  height: 74%;
 }

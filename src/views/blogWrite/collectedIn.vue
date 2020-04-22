@@ -32,11 +32,7 @@
             v-for="(item, index) in searchWorks(search)"
             :key="index"
             >-->
-            <tr
-              class="body"
-              v-for="(item, index) in searchWorks(search)"
-              :key="index"
-            >
+            <tr class="body" v-for="(item, index) in searchWorks(search)" :key="index">
               <td>
                 <div class="collectde-line">
                   <i class="zyjFamily">&#xe615;</i>
@@ -46,11 +42,7 @@
               <td>{{ item.workTime }}</td>
               <td>{{ item.workState }}</td>
               <td>
-                <i
-                  class="zyjFamily deleteIcon"
-                  @click="handleDeleteItem(item.id)"
-                  >&#xe614;</i
-                >
+                <i class="zyjFamily deleteIcon" @click="handleDeleteItem(item.id)">&#xe614;</i>
               </td>
             </tr>
             <!-- </router-link> -->
@@ -135,9 +127,14 @@ export default {
   background-color: #f5f5f5;
   // height: 680px;
   box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
   .gundong {
-    height: 680px;
+    height: 100%;
     overflow-y: scroll;
     background-color: #fff;
     border-radius: 10px;
