@@ -9,6 +9,10 @@ import "../public/styles/public.css";
 // axios全局引入
 import axios from "axios";
 Vue.prototype.$axios = axios;
+// 全局引入elementui
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 

@@ -45,14 +45,6 @@ const routes = [{
     }
   },
   {
-    path: "/bolgAuthor",
-    name: "bolgAuthor",
-    component: () => import("../views/bolgAuthor.vue"),
-    meta: {
-      title: "博客作者推荐"
-    }
-  },
-  {
     path: "/blogWrite",
     name: "blogWrite",
     component: () => import("../views/blogWrite/blogWrite.vue"),
@@ -132,6 +124,75 @@ const routes = [{
         meta: {
           active: "/blogSearch/searchCorpus",
           title: "搜索文集"
+        }
+      }
+    ]
+  },
+  {
+    path: "/blogMine",
+    name: "blogMine",
+    component: () => import("../views/blogMine.vue"),
+    meta: {
+      title: "我的主页"
+    },
+    children: [{
+        path: "mineMassage",
+        name: "mineMassage",
+        component: () =>
+          import("../components/blogMine/mineMiddle/mineMassage.vue"),
+        meta: {
+          active: "/blogMine/mineMassage",
+          title: "个人信息"
+        }
+      },
+      {
+        path: "mineAttention",
+        name: "mineAttention",
+        component: () =>
+          import("../components/blogMine/mineMiddle/mineAttention.vue"),
+        meta: {
+          active: "/blogMine/mineMassage",
+          title: "我的关注"
+        }
+      },
+      {
+        path: "mineLike",
+        name: "mineLike",
+        component: () =>
+          import("../components/blogMine/mineMiddle/mineLike.vue"),
+        meta: {
+          active: "/blogMine/mineMassage",
+          title: "我的喜欢"
+        }
+      },
+      {
+        path: "mineArtical",
+        name: "mineArtical",
+        component: () =>
+          import("../components/blogMine/mineMiddle/mineArtical.vue"),
+        meta: {
+          active: "/blogMine/mineMassage",
+          title: "我的文章"
+        }
+      },
+      {
+        path: "mineCorpus",
+        name: "mineCorpus",
+        component: () =>
+          import("../components/blogMine/mineMiddle/mineCorpus.vue"),
+        meta: {
+          active: "/blogMine/mineMassage",
+          title: "我的文集"
+        }
+      },
+      {
+        path: "mineSetting",
+        name: "mineSetting",
+        component: () =>
+          import("../components/blogMine/mineMiddle/mineSetting.vue"),
+        meta: {
+          active: "/blogMine/mineMassage",
+          title: "账户设置"
         }
       }
     ]

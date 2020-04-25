@@ -53,7 +53,7 @@
               </div>
             </div>
             <div class="bottom">
-              <router-link to="bolgAuthor">
+              <router-link to="/blogSearch/searchUsers">
                 <button>
                   更多优秀作者
                   <i class="layui-icon layui-icon-next"></i>

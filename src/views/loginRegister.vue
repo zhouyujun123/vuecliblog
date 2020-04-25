@@ -233,6 +233,7 @@ export default {
   background-color: #ea6f5a;
   color: #fff;
   border: 2px solid #ea6f5a;
+  margin-left: 34px;
 }
 .LRbgc .LRindex .LR_right .register .joinFoot button {
   width: 292px;
@@ -242,7 +243,7 @@ export default {
   background-color: #42c02e;
   color: #fff;
   border: 2px solid #42c02e;
-  /* margin-left: 34px; */
+  margin-left: 34px;
 }
 .LRbgc .LRindex .LR_right .register .joinFoot p {
   /*text-align: right;*/

@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "478792",
+      "name": "我的",
+      "font_class": "wode",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "564380",
+      "name": "ok",
+      "font_class": "ok",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "1115041",
+      "name": "关注",
+      "font_class": "guanzhu",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "5652788",
+      "name": "粉丝",
+      "font_class": "fensi",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
       "icon_id": "10292039",
       "name": "删 除",
       "font_class": "shanchu",
@@ -25,13 +53,6 @@
       "font_class": "verify",
       "unicode": "e63f",
       "unicode_decimal": 58943
-    },
-    {
-      "icon_id": "736225",
-      "name": "头像7",
-      "font_class": "icon26",
-      "unicode": "e630",
-      "unicode_decimal": 58928
     },
     {
       "icon_id": "5226469",
@@ -67,13 +88,6 @@
       "font_class": "shoucang",
       "unicode": "e612",
       "unicode_decimal": 58898
-    },
-    {
-      "icon_id": "3759636",
-      "name": "喜欢",
-      "font_class": "xihuan",
-      "unicode": "e69a",
-      "unicode_decimal": 59034
     },
     {
       "icon_id": "5024130",

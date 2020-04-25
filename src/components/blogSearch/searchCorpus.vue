@@ -6,7 +6,8 @@
         <div class="detail">
           <p>{{ item.corpusName }}</p>
           <p>
-            <span>{{ item.corpusFans }}</span>人关注
+            <span>{{ item.corpusFans }}</span>
+            人关注
           </p>
         </div>
       </div>
