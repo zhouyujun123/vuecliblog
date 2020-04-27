@@ -4,7 +4,9 @@
       <div class="counter">
         <div class="head-top">
           <div class="left">
-            <span>返回主页</span>
+            <router-link to="/">
+              <span>返回主页</span>
+            </router-link>
             <span>一只兔子的主页</span>
           </div>
           <div class="right">
@@ -50,7 +52,6 @@ export default {
 <style scoped lang="stylus">
 .mineHead {
   .headMine {
-
     .head-top {
       margin-top: 10px;
       padding: 5px 10px;

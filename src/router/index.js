@@ -135,6 +135,7 @@ const routes = [{
     meta: {
       title: "我的主页"
     },
+    redirect: "/blogMine/mineMassage",
     children: [{
         path: "mineMassage",
         name: "mineMassage",

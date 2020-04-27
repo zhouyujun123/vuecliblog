@@ -25,13 +25,13 @@
       <div class="my fr">
         <img src="../assets/images/headPhoto2.png" />
         <div class="drop_downBox">
-          <router-link to="blogMine">
+          <router-link :to="{ name: 'blogMine' }">
             <div class="options">
               <i class="zyjFamily">&#xe6ef;</i>
               <span>我的主页</span>
             </div>
           </router-link>
-          <router-link to="blogWrite">
+          <router-link :to="{ name: 'blogWrite' }">
             <div class="options">
               <i class="zyjFamily">&#xe60f;</i>
               <span>写文章</span>
