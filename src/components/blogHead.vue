@@ -4,13 +4,9 @@
       <p class="fl">一个博客</p>
       <ul class="fl">
         <router-link to="/">
-          <li class="fl">
-            <i class="zyjFamily">&#xe74b;</i>首页
-          </li>
+          <li class="fl"><i class="zyjFamily">&#xe74b;</i>首页</li>
         </router-link>
-        <li class="fl">
-          <i class="zyjFamily">&#xe601;</i>APP
-        </li>
+        <li class="fl"><i class="zyjFamily">&#xe601;</i>APP</li>
       </ul>
       <div class="search fl">
         <div class="search_bgc">
@@ -63,13 +59,12 @@ export default {
 <style scoped lang="stylus">
 .arc-head {
   border-bottom: 1px solid #eee;
-  min-width: 1400px;
+  // min-width: 1400px;
+  width: 100%;
   background-color: #fff;
   box-shadow: 5px 5px 5px #eee;
-  // position: fixed;
-  // top 0
-  // // right: 0;
-  // // left: 0;
+  position: fixed;
+  overflow: visible;
   z-index: 999;
 }
 

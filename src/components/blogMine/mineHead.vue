@@ -69,11 +69,14 @@ export default {
     }
 
     .people-area {
+      background-image: url('../../../public/images/bgc-1.jpg');
+      background-size: 100% 100%;
+      border-radius: 10px;
+
       .area-top {
-        background-color: rgba(0, 0, 0, 0.2);
+        // background-color: rgba(0, 0, 0, 0.2);
         padding: 15px 10px;
         margin: 20px 0;
-        border-radius: 10px;
         // border: 1px solid #eee;
         display: flex;
         justify-content: space-between;
@@ -96,19 +99,19 @@ export default {
             .name {
               font-size: 18px;
               font-weight: bold;
-              color: #eee;
+              color: #666;
               margin-top: 20px;
             }
 
             .detail {
               font-size: 14px;
-              color: #eee;
+              color: #666;
               margin-top: 5px;
             }
 
             .time {
               font-size: 12px;
-              color: #FFF;
+              color: #666;
               margin-top: 5px;
             }
           }
@@ -121,15 +124,15 @@ export default {
             text-align: center;
             margin-left: 10px;
             margin-top: 13.5px;
-            background-color: #eee;
+            background-color: #FFF;
             height: 63px;
             width: 63px;
-            border-radius: 10px;
+            border-radius: 50%;
             border: 1px solid #f5f5f5;
             padding: 5px;
 
             i {
-              font-size: 40px;
+              font-size: 30px;
               color: #ea6f5a;
             }
 

@@ -97,14 +97,29 @@ export default {
       });
     },
     addNewWork() {
-      if (this.newWork === "") return;
-      this.workLine.unshift({
-        id: id++,
-        newWork: this.newWork,
-        workTime: new Date(),
-        workNum: 0
-      });
-      this.newWork = "";
+      this.$axios
+        .get("localhost:8090/add", {
+          params: {
+            id: id++,
+            newWork: this.newWork,
+            workTime: new Date(),
+            workNum: 0
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          if (this.newWork === "") return;
+          this.workLine.unshift({
+            id: id++,
+            newWork: this.newWork,
+            workTime: new Date(),
+            workNum: 0
+          });
+          this.newWork = "";
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     handleDeleteItem(id) {
       // let id = this.item.id;
@@ -127,7 +142,7 @@ export default {
     // jumpToCollectdeIn() {}
   },
   filters: {
-    dateFormat: function(dateStr, pattern = "") {
+    dateFormat: function (dateStr, pattern = "") {
       var dt = new Date(dateStr);
       var y = dt.getFullYear();
       // ES6字符串新方法padStart在开始位置补位，padEnd在结束位置补位
@@ -169,7 +184,7 @@ export default {
   // 计算属性
   computed: {
     // 计算属性的 getter
-    corpusLength: function() {
+    corpusLength: function () {
       // `this` 指向 vm 实例
       return this.workLine.length;
     }
