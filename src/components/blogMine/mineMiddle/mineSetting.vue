@@ -4,19 +4,19 @@
     <dl>
       <dt>原密码：</dt>
       <dd>
-        <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+        <el-input v-model="passWord" placeholder="请输入内容"></el-input>
       </dd>
     </dl>
     <dl>
       <dt>新密码：</dt>
       <dd>
-        <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+        <el-input v-model="passWordNow" placeholder="请输入内容"></el-input>
       </dd>
     </dl>
     <dl>
       <dt>再次输入新密码：</dt>
       <dd>
-        <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+        <el-input v-model="morePassWordNow" placeholder="请输入内容"></el-input>
       </dd>
     </dl>
     <button class="saveMassage">提交</button>
@@ -24,7 +24,14 @@
 </template>
 <script>
 export default {
-  name: "mineSetting"
+  name: "mineSetting",
+  data() {
+    return {
+      passWord: "",
+      passWordNow: "",
+      morePassWordNow: ""
+    };
+  }
 };
 </script>
 

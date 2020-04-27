@@ -2,7 +2,7 @@
   <div class="mineCorpus">
     <div class="corpus">
       <div class="left">
-        <img src="@/assets/images/book.png" />
+        <img src="../../../assets/images/book2.png" />
         <div class="detail">
           <p>1234598</p>
           <p>
