@@ -6,7 +6,9 @@
         :key="index"
         @click="toggle(index, tab.view)"
         :class="{ active: active == index }"
-      >{{ tab.type }}</li>
+      >
+        {{ tab.type }}
+      </li>
     </ul>
     <!--:is实现多个组件实现同一个挂载点-->
     <component :is="currentView"></component>
