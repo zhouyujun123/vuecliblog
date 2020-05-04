@@ -1,21 +1,28 @@
 <template>
   <div class="searchCorpus">
-    <div class="corpus" v-for="(item, index) in corpusList" :key="index">
-      <div class="left">
-        <img src="@/assets/images/book.png" />
-        <div class="detail">
-          <p>{{ item.corpusName }}</p>
-          <p>
-            <span>{{ item.corpusFans }}</span>
-            人关注
-          </p>
+    <router-link
+      :to="{ name: 'blogCorpus' }"
+      v-for="(item, index) in corpusList"
+      :key="index"
+    >
+      <div class="corpus" >
+        <div class="left">
+          <img src="@/assets/images/book.png" />
+          <div class="detail">
+            <p>{{ item.corpusName }}</p>
+            <p>
+              <span>{{ item.corpusFans }}</span>
+              人关注
+            </p>
+          </div>
+        </div>
+        <div class="right">
+          <!-- <button class="get">已关注</button> -->
+          <button class="willGet">+关注</button>
         </div>
       </div>
-      <div class="right">
-        <!-- <button class="get">已关注</button> -->
-        <button class="willGet">+关注</button>
-      </div>
-    </div>
+    </router-link>
+
     <button class="more">更多搜索结果...</button>
   </div>
 </template>

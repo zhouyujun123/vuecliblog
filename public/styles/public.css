@@ -18,6 +18,10 @@ li {
   list-style: none;
 }
 
+a {
+  text-decoration: none;
+}
+
 .count {
   width: 1400px;
   margin: 0 auto;
@@ -40,12 +44,4 @@ li {
 
 .fr {
   float: right;
-}
-
-/* 富文本编辑器样式 */
-/* .ql-editor {
-  height: 470px !important;
-} */
-.quill-editor{
-  /* height: 74%; */
 }

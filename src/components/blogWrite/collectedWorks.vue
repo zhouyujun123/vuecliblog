@@ -11,12 +11,7 @@
         </div>
       </div>
       <div class="add-collectde">
-        <input
-          @keyup.enter="addNewWork()"
-          type="text"
-          placeholder="请输入新的文集标题"
-          v-model="newWork"
-        />
+        <input @keyup.enter="addNewWork()" type="text" placeholder="请输入新的文集标题" v-model="newWork" />
         <button @click="addNewWork()">新文集</button>
       </div>
       <div class="collectde-table">
@@ -42,11 +37,7 @@
             <td>{{ item.workTime | dateFormat() }}</td>
             <td>{{ item.workNum }}</td>
             <td>
-              <i
-                class="zyjFamily deleteIcon"
-                @click.prevent="handleDeleteItem(item.id)"
-                >&#xe614;</i
-              >
+              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.id)">&#xe614;</i>
             </td>
           </tr>
         </table>
@@ -56,7 +47,7 @@
 </template>
 
 <script>
-let id = 0;
+let myData = new Date();
 export default {
   name: "collectedWorks",
   data() {
@@ -64,31 +55,31 @@ export default {
       workAll: 0,
       // 文集数量
       // corpusLength: 0,
-      workLine: [
-        {
-          id: 0,
-          newWork: "vue实战训练",
-          workTime: "2020-04-11 03:04:56",
-          workNum: 0
-        },
-        {
-          id: 1,
-          newWork: "zyj",
-          workTime: "2020-04-11 03:04:56",
-          workNum: 0
-        },
-        {
-          id: 2,
-          newWork: "ymt",
-          workTime: "2020-04-11 03:04:56",
-          workNum: 0
-        }
-      ],
+      corpusTime: "",
+      workLine: [],
       search: "",
       newWork: ""
     };
   },
+  created: function() {
+    // console.log(this.$options.methods.formatDateTime(myData));
+    this.$axios
+      .get("http://localhost:2325/listAllArticle/" + 1001)
+      .then(resp => {
+        for (var i = 0; i < resp.data.length; i++) {
+          this.workLine.unshift({
+            newWork: resp.data[i].corpusName,
+            workTime: resp.data[i].corpusTime,
+            workNum: resp.data[i].corpusNum
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
   methods: {
+    // 搜索文集
     searchWorks(keywords) {
       return this.workLine.filter(item => {
         if (item.newWork.includes(keywords)) {
@@ -96,23 +87,25 @@ export default {
         }
       });
     },
+    // 添加文集
     addNewWork() {
       this.$axios
-        .get("localhost:8090/add", {
+        .get("http://localhost:2325/add", {
           params: {
-            id: id++,
-            newWork: this.newWork,
-            workTime: new Date(),
-            workNum: 0
+            id: this.$options.methods.randData(),
+            name: this.newWork,
+            time: this.$options.methods.formatDateTime(myData),
+            number: 0
           }
         })
         .then(resp => {
           console.log(resp);
           if (this.newWork === "") return;
           this.workLine.unshift({
-            id: id++,
+            // id: this.$options.methods.randData(),
+            // userId: 1001,
             newWork: this.newWork,
-            workTime: new Date(),
+            workTime: myData,
             workNum: 0
           });
           this.newWork = "";
@@ -121,14 +114,28 @@ export default {
           console.log(err);
         });
     },
-    handleDeleteItem(id) {
+    // 删除文集
+    handleDeleteItem() {
       // let id = this.item.id;
-      console.log(id);
-      this.workLine.splice(
-        this.workLine.findIndex(item => item.id === id),
-        1
-      );
+      this.$axios
+        .get("http://localhost:2325/test", {
+          params: {
+            // id: this.$options.methods.randData()
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          // console.log(id);
+          this.workLine.splice(
+            this.workLine.findIndex(item => item.id === resp.data.corpusId),
+            1
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
+    // 页面传值
     handleClick(id, newWork) {
       console.log(id);
       this.$router.push({
@@ -138,11 +145,33 @@ export default {
           newWork: newWork
         }
       });
+    },
+    formatDateTime(date) {
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      let second = date.getSeconds();
+      second = second < 10 ? "0" + second : second;
+      return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+    },
+    randData() {
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      return y + m + d + Math.floor(Math.random() * (9999 - 1000));
     }
-    // jumpToCollectdeIn() {}
   },
   filters: {
-    dateFormat: function (dateStr, pattern = "") {
+    dateFormat: function(dateStr, pattern = "") {
       var dt = new Date(dateStr);
       var y = dt.getFullYear();
       // ES6字符串新方法padStart在开始位置补位，padEnd在结束位置补位
@@ -184,7 +213,7 @@ export default {
   // 计算属性
   computed: {
     // 计算属性的 getter
-    corpusLength: function () {
+    corpusLength: function() {
       // `this` 指向 vm 实例
       return this.workLine.length;
     }

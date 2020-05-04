@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <router-link to="loginRegister">
+      <router-link :to="{ name: 'loginRegister' }">
         <button class="fr loginBth">登录 / 注册</button>
       </router-link>
     </div>

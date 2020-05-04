@@ -4,9 +4,9 @@
     <div class="write-left">
       <div class="whoWrite">
         <img src="../../assets/images/headPhoto2.png" />
-        <!-- <router-link :to="{ name: 'blogHome' }"> -->
-        <span>个人中心</span>
-        <!-- </router-link> -->
+        <router-link :to="{ name: 'blogMine' }">
+          <span>个人中心</span>
+        </router-link>
       </div>
       <div class="options">
         <router-link

@@ -45,6 +45,14 @@ const routes = [{
     }
   },
   {
+    path: "/blogCorpus",
+    name: "blogCorpus",
+    component: () => import("../views/blogCorpus.vue"),
+    meta: {
+      title: "博客文集"
+    }
+  },
+  {
     path: "/blogWrite",
     name: "blogWrite",
     component: () => import("../views/blogWrite/blogWrite.vue"),
@@ -152,7 +160,7 @@ const routes = [{
         component: () =>
           import("../components/blogMine/mineMiddle/mineAttention.vue"),
         meta: {
-          active: "/blogMine/mineMassage",
+          active: "/blogMine/mineAttention",
           title: "我的关注"
         }
       },
@@ -162,7 +170,7 @@ const routes = [{
         component: () =>
           import("../components/blogMine/mineMiddle/mineLike.vue"),
         meta: {
-          active: "/blogMine/mineMassage",
+          active: "/blogMine/mineLike",
           title: "我的喜欢"
         }
       },
@@ -172,7 +180,7 @@ const routes = [{
         component: () =>
           import("../components/blogMine/mineMiddle/mineArtical.vue"),
         meta: {
-          active: "/blogMine/mineMassage",
+          active: "/blogMine/mineArtical",
           title: "我的文章"
         }
       },
@@ -182,7 +190,7 @@ const routes = [{
         component: () =>
           import("../components/blogMine/mineMiddle/mineCorpus.vue"),
         meta: {
-          active: "/blogMine/mineMassage",
+          active: "/blogMine/mineCorpus",
           title: "我的文集"
         }
       },
@@ -192,8 +200,49 @@ const routes = [{
         component: () =>
           import("../components/blogMine/mineMiddle/mineSetting.vue"),
         meta: {
-          active: "/blogMine/mineMassage",
+          active: "/blogMine/mineSetting",
           title: "账户设置"
+        }
+      }
+    ]
+  },
+  {
+    path: "/blogPeople",
+    name: "blogPeople",
+    component: () => import("../views/blogPeople.vue"),
+    meta: {
+      title: "用户主页"
+    },
+    redirect: "/blogPeople/peopleCorpus",
+    children: [
+      {
+        path: "peopleCorpus",
+        name: "peopleCorpus",
+        component: () =>
+          import("../components/blogPeople/peopleMiddle/peopleRight/peopleCorpus.vue"),
+        meta: {
+          active: "/blogPeople/peopleCorpus",
+          title: "用户文集"
+        }
+      },
+      {
+        path: "peopleArtical",
+        name: "peopleArtical",
+        component: () =>
+          import("../components/blogPeople/peopleMiddle/peopleRight/peopleArtical.vue"),
+        meta: {
+          active: "/blogPeople/peopleArtical",
+          title: "用户文章"
+        }
+      },
+      {
+        path: "peopleLike",
+        name: "peopleLike",
+        component: () =>
+          import("../components/blogPeople/peopleMiddle/peopleRight/peopleLike.vue"),
+        meta: {
+          active: "/blogPeople/peopleLike",
+          title: "用户喜欢"
         }
       }
     ]
