@@ -3,24 +3,15 @@
     <write-left></write-left>
     <div class="new-work">
       <div class="gundong">
-        <div class="collectde-top">
-          <span>{{ corpusName }}</span>
-        </div>
         <div class="newWorkName">
           <input class="fir" type="text" placeholder="给你的新文章取个名字吧！" v-model="workName" />
-          <input class="sen" type="text" placeholder="简单介绍你要写些什么..." v-model="introduce" />
+          <div class="collectde-buttom">
+            <button class="putout_btn" @click="submit">添加至列表</button>
+            <button class="putout_btn del-add" @click="backUrl">取消添加</button>
+          </div>
         </div>
-        <quill-editor
-          v-model="content"
-          ref="myQuillEditor"
-          :options="editorOption"
-          @blur="onEditorBlur($event)"
-          @focus="onEditorFocus($event)"
-          @change="onEditorChange($event)"
-        ></quill-editor>
-        <div class="collectde-buttom">
-          <button class="save_btn" @click="saveHtml">保存</button>
-          <button class="putout_btn">发布</button>
+        <div class="height">
+          <mavon-editor v-model="content" @save="save" @change="change" />
         </div>
       </div>
     </div>
@@ -29,83 +20,106 @@
 
 <script>
 import writeLeft from "@/components/blogWrite/writeLeft.vue";
+import { mavonEditor } from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
 
-// 引入富文本编辑器vue-quill-editor(局部)
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-import { quillEditor } from "vue-quill-editor";
-
+let myData = new Date();
 export default {
   name: "newWork",
   components: {
     writeLeft,
-    quillEditor
+    mavonEditor
   },
   data() {
     return {
-      // 文集名称
-      corpusName: "",
+      // 文集id
+      corpusId: "",
       // 文章名称
       workName: "",
-      // 文章介绍
-      introduce: "",
-      // 文章美容
-      content: `<p>写一个精彩的故事吧...</p>`,
-      editorOption: {
-        modules: {
-          toolbar: [
-            ["bold", "italic", "underline", "strike"],
-            ["blockquote", "code-block"],
-            [{ header: 1 }, { header: 2 }],
-            [{ list: "ordered" }, { list: "bullet" }],
-            // [{ script: "sub" }, { script: "super" }],
-            [{ indent: "-1" }, { indent: "+1" }],
-            [{ size: ["small", false, "large", "huge"] }],
-            [{ header: [1, 2, 3, 4, false] }],
-            [{ color: [] }, { background: [] }],
-            [{ font: [] }],
-            [{ align: [] }],
-            // ["clean"],
-            ["link", "image"]
-          ]
-        }
-      }
+      // 文章内容
+      content: "",
+      html: ""
     };
   },
-  computed: {
-    editor() {
-      return this.$refs.myQuillEditor.quill;
-    }
-  },
+  computed: {},
   methods: {
-    // onEditorReady(quill) {
-    //   console.log("editor ready!", quill);
-    // }, // 准备编辑器
-    onEditorBlur() {}, // 失去焦点事件
-    onEditorFocus() {}, // 获得焦点事件
-    onEditorChange({ quill, html, text }) {
-      console.log("editor change!", quill, html, text);
-      this.content = html;
-    }, // 内容改变事件
-    saveHtml() {
+    created() {
+      return (this.corpusId = this.$route.params.id);
+    },
+    // 所有操作都会被解析重新渲染
+    change(value, render) {
+      // render 为 markdown 解析后的结果[html]
+      this.html = render;
+    },
+    save() {
+      console.log(1);
+    },
+    // 添加至列表
+    submit() {
       console.log(this.content);
-      this.$axios
-        .get("http://localhost:8090/add", {
-          params: {
-            id: 1
-          }
-        })
-        .then(resp => {
-          console.log(resp);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.workName == "") {
+        alert("文章名字不能为空！");
+      } else if (this.content == "") {
+        alert("文章内容不能为空！");
+      } else {
+        this.$axios
+          // .post("http://localhost:8092/tArticle/addArticle", {
+          //   articleId: this.$options.methods.randData(),
+          //   articleName: this.workName,
+          //   articleCorpusId: this.corpusId,
+          //   articleAuthor: this.$store.state.UserId,
+          //   articleContent: this.html,
+          //   articleTime: this.$options.methods.formatDateTime(myData)
+          // })
+          .get("http://localhost:8092/tArticle/addArticle", {
+            params: {
+              articleId: this.$route.params.articleId,
+              articleName: this.workName,
+              articleCorpusId: this.corpusId,
+              articleAuthor: this.$store.state.UserId,
+              articleContent: this.html,
+              articleTime: this.$options.methods.formatDateTime(myData)
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            if (resp.data.resultCode == 5000) {
+              alert("添加文章失败！");
+            } else if (resp.data.resultCode == 2000) {
+              alert("文章添加成功！");
+              this.$router.go(-1);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    // 文章随机数id--->文集id+4位随机数
+    randData() {
+      return Math.floor(Math.random() * (999999 - 100000));
+    },
+    backUrl() {
+      this.$router.go(-1);
+    },
+    // 时间格式转换
+    formatDateTime(date) {
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      let second = date.getSeconds();
+      second = second < 10 ? "0" + second : second;
+      return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
     }
   },
   mounted() {
-    return (this.corpusName = this.$route.params.colName);
+    return (this.corpusId = this.$route.params.colId);
   }
 };
 </script>
@@ -131,19 +145,31 @@ export default {
     box-sizing: border-box;
     padding: 0 20px;
 
+    .height {
+      margin-top: 10px;
+      height: 88%;
+
+      .v-note-wrapper.shadow {
+        height: 100%;
+        box-shadow: none !important;
+      }
+    }
+
     .collectde-top {
       display: flex;
       justify-content: space-between;
       padding: 10px 0px;
       color: #ea6f5a;
       font-size: 16px;
-      line-height: 30px;
+      line-height: 35px;
     }
 
     .newWorkName {
+      padding-top: 20px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
 
+      // flex-direction: column;
       .fir {
         width: 40%;
         height: 35px;
@@ -168,19 +194,6 @@ export default {
 
     .collectde-buttom {
       text-align: center;
-      padding-top: 10px;
-
-      .save_btn {
-        width: 100px;
-        height: 35px;
-        background-color: #fff;
-        color: #ea6f5a;
-        font-size: 14px;
-        font-weight: bold;
-        border: 1.5px solid #ea6f5a;
-        border-radius: 20px;
-        margin-right: 20px;
-      }
 
       .putout_btn {
         width: 100px;
@@ -192,11 +205,15 @@ export default {
         border: 1.5px solid #ea6f5a;
         border-radius: 20px;
       }
+
+      .del-add {
+        width: 80px;
+        border: 1px solid #666;
+        background-color: #fff;
+        color: #999;
+        margin-left: 10px;
+      }
     }
   }
-}
-
-.ql-container.ql-snow {
-  min-height: 430px !important;
 }
 </style>

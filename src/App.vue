@@ -4,7 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>-->
-    <router-view />
+    <router-view v-if="isRouterAlive" />
   </div>
 </template>
 
@@ -13,8 +13,26 @@
 
 export default {
   name: "App",
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
   components: {
     // blogHome
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    };
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
+    }
   }
 };
 </script>

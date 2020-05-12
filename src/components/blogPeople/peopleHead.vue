@@ -100,25 +100,30 @@ export default {
         position: absolute;
         top: 110px;
         right: 0;
+        background-image: url('../../assets/images/circle_1.png');
+        background-size: 100% 100%;
 
         .btn {
           // float: right;
           text-align: center;
-          background-color: #FFF;
-          height: 63px;
-          width: 63px;
+          // background-color: #FFF;
+          height: 80px;
+          width: 80px;
           border-radius: 50%;
-          border: 1px solid #f5f5f5;
+          // border: 1px solid #f5f5f5;
+          box-sizing: border-box;
           padding: 5px;
+          padding-top: 14px;
 
           i {
+            color: #fff;
             font-size: 30px;
-            color: #ea6f5a;
+            // color: #ea6f5a;
           }
 
           p {
             font-size: 12px;
-            color: #333;
+            color: #fff;
           }
         }
       }

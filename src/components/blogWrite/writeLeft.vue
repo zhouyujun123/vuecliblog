@@ -1,5 +1,4 @@
 <template>
-  <!-- <div> -->
   <div class="blog-write-left">
     <div class="write-left">
       <div class="whoWrite">
@@ -12,11 +11,9 @@
         <router-link
           to="/blogWrite/works"
           tag="div"
-          :class="{ 'activeOption': $route.meta.active === '/blogWrite/works' }"
+          :class="{ activeOption: $route.meta.active === '/blogWrite/works' }"
         >
-          <div class="option">
-            <i class="zyjFamily">&#xe615;</i>我的文章
-          </div>
+          <div class="option"><i class="zyjFamily">&#xe615;</i>我的文章</div>
         </router-link>
         <router-link
           to="/blogWrite/collectedWorks"
@@ -25,20 +22,16 @@
             activeOption: $route.meta.active === '/blogWrite/collectedWorks'
           }"
         >
-          <div class="option">
-            <i class="zyjFamily">&#xe610;</i>我的文集
-          </div>
+          <div class="option"><i class="zyjFamily">&#xe610;</i>我的文集</div>
         </router-link>
+        <div class="option"><i class="zyjFamily">&#xe616;</i>我的草稿</div>
+        <div class="option"><i class="zyjFamily">&#xe614;</i>垃圾箱</div>
       </div>
       <router-link :to="{ name: 'blogHome' }">
         <button>返回首页</button>
       </router-link>
     </div>
   </div>
-  <!-- <transition mode="out-in">
-      <router-view></router-view>
-  </transition>-->
-  <!-- </div> -->
 </template>
 
 <script>

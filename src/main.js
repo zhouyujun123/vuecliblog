@@ -13,6 +13,10 @@ Vue.prototype.$axios = axios;
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
+// // 引入makdown编辑器
+// import mavonEditor from "mavon-editor";
+// import "mavon-editor/dist/css/index.css";
+// Vue.use(mavonEditor);
 
 Vue.config.productionTip = false;
 
@@ -21,3 +25,17 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount("#app");
+
+// 添加请求拦截器，在请求头中加token
+axios.interceptors.request.use(
+  config => {
+    if (localStorage.getItem("Authorization")) {
+      config.headers.Authorization = localStorage.getItem("Authorization");
+    }
+
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);

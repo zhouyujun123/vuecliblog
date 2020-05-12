@@ -5,27 +5,18 @@
       <div class="blog-artleft fl">
         <div class="blog-view">
           <p class="art-name">我的一天</p>
-          <p class="art-head">题记：我今天都经历了啥。。。</p>
-          <p class="art-time">2019-00-00 00：00：00</p>
-          <p class="art-con">
-            今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今
-            天我巴拉巴拉巴拉巴拉今天我
-            巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
-            今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今
-            天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
-            今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今
-            天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
-            今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今
-            天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
-            今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今
-            天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
-            今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今
-            天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉今天我巴拉巴拉巴拉巴拉
-          </p>
+          <p class="art-head">发布时间：2019-00-00 作者：zyj</p>
+          <mavon-editor v-html="value" />
           <div class="art-bom">
-            <span> <i class="zyjFamily">&#xe60c;</i>12334 </span>
-            <span> <i class="zyjFamily">&#xe7d0;</i>123123 </span>
-            <span> <i class="zyjFamily">&#xe612;</i>123456 </span>
+            <span>
+              <i class="zyjFamily">&#xe60c;</i>12334
+            </span>
+            <span>
+              <i class="zyjFamily">&#xe7d0;</i>123123
+            </span>
+            <span>
+              <i class="zyjFamily">&#xe612;</i>123456
+            </span>
           </div>
         </div>
         <div class="blog-comment">
@@ -49,9 +40,7 @@
               <div class="building-owner">
                 <p class="building-person">回复人的名字</p>
                 <p class="building-time">2019-02-02 00:00:00</p>
-                <p class="building-con">
-                  是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。
-                </p>
+                <p class="building-con">是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。</p>
                 <p class="building-bom">
                   <span>
                     <i class="zyjFamily">&#xe60c;</i>
@@ -70,9 +59,7 @@
                       <p class="inside-time">2019-02-02 00:00:00</p>
                     </div>
                   </div>
-                  <p class="inside-con">
-                    是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。
-                  </p>
+                  <p class="inside-con">是啊，非常的吸引人。建议你看完再去阅读《了不起的盖茨比》，文字非常的华丽。</p>
                   <p class="inside-bom">
                     <span>
                       <i class="zyjFamily">&#xe60c;</i>
@@ -93,6 +80,7 @@
                 </div>
               </div>
             </div>
+            <el-pagination layout="prev, pager, next" :total="100"></el-pagination>
           </div>
         </div>
       </div>
@@ -110,27 +98,19 @@
           </div>
           <div class="line-works"></div>
           <div class="works">
-            <p class="work-name">
-              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
-            </p>
+            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
             <p class="work-read">阅读量111222</p>
           </div>
           <div class="works">
-            <p class="work-name">
-              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
-            </p>
+            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
             <p class="work-read">阅读量111222</p>
           </div>
           <div class="works">
-            <p class="work-name">
-              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
-            </p>
+            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
             <p class="work-read">阅读量111222</p>
           </div>
           <div class="works">
-            <p class="work-name">
-              文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目
-            </p>
+            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
             <p class="work-read">阅读量111222</p>
           </div>
         </div>
@@ -161,6 +141,8 @@
 </template>
 
 <script>
+import { mavonEditor } from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
 import blogHead from "@/components/blogHead.vue";
 import blogFoot from "@/components/blogFoot.vue";
 
@@ -168,7 +150,17 @@ export default {
   name: "blogArticle",
   components: {
     blogHead,
-    blogFoot
+    blogFoot,
+    mavonEditor
+  },
+  data() {
+    return {
+      value: `<blockquote>
+									<p>你好</p>
+									</blockquote>
+									<p><code>java</code></p>`,
+      defaultData: "preview"
+    };
   }
 };
 </script>
@@ -194,6 +186,10 @@ export default {
       box-sizing: border-box;
       margin-top: 10px;
       margin-bottom: 10px;
+
+      .v-note-wrapper.shadow {
+        box-shadow: none !important;
+      }
 
       p {
         color: #404040;
@@ -462,6 +458,11 @@ export default {
               }
             }
           }
+        }
+
+        .el-pagination {
+          display: flex;
+          justify-content: center;
         }
       }
     }

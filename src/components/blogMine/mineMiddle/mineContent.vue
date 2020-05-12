@@ -86,9 +86,9 @@ export default {
     justify-content: space-between;
 
     .left-directory {
-      width: 230px;
+      width: 210px;
       border-right: 1px solid #eee;
-      padding-right: 20px;
+      padding-right: 40px;
 
       .option {
         // background-color: rgba(0, 0, 0, 0.2);
@@ -103,19 +103,22 @@ export default {
 
         i {
           margin-right: 10px;
-          color: #999;
+          color: #ea6f5a;
           font-size: 16px;
           font-weight: bold;
         }
       }
 
       .activeMine {
+        background-image: url('../../../assets/images/circle_2.png');
+        background-size: 100% 100%;
+
         span {
-          color: pink;
+          color: #fff;
         }
 
         i {
-          color: pink;
+          color: #fff;
         }
       }
     }

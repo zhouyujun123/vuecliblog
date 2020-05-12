@@ -2,7 +2,7 @@
   <div class="works">
     <div class="gundong">
       <div class="collectde-top">
-        <span>文章(1)</span>
+        <span>文章({{ corpusLength }})</span>
         <div class="top-right">
           <div class="search">
             <input type="text" placeholder="搜索" v-model="search" />
@@ -10,7 +10,7 @@
               <i class="zyjFamily">&#xe65b;</i>
             </button>
           </div>
-          <button class="newWork">新文章</button>
+          <button class="newWork" @click="addNewWork()">新文章</button>
         </div>
       </div>
       <!-- <div class="add-collectde">
@@ -34,6 +34,7 @@
             class="body"
             v-for="(item, index) in searchWorks(search)"
             :key="index"
+            @click="handleClick(item.id)"
           >
             <td>
               <div class="collectde-line">
@@ -44,13 +45,20 @@
             <td>{{ item.workTime | dateFormat() }}</td>
             <td>{{ item.workState }}</td>
             <td>
-              <i class="zyjFamily deleteIcon" @click="handleDeleteItem(item.id)"
-                >&#xe614;</i
-              >
+              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.delId)">&#xe614;</i>
             </td>
           </tr>
         </table>
       </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :hide-on-single-page="value"
+        :page-size="6"
+        layout="prev, pager, next"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -61,29 +69,19 @@ export default {
   name: "collectedWorks",
   data() {
     return {
-      workAll: 0,
-      workLine: [
-        {
-          id: 0,
-          work: "vue实战训练",
-          workTime: "2020-04-11 03:04:56",
-          workState: "已发布"
-        },
-        {
-          id: 1,
-          work: "zyj",
-          workTime: "2020-04-11 03:04:56",
-          workState: "正在写"
-        },
-        {
-          id: 2,
-          work: "ymt",
-          workTime: "2020-04-11 03:04:56",
-          workState: "正在写"
-        }
-      ],
+      // 文章数量
+      corpusLength: 0,
+      // 默认文集
+      colId: "000000000000",
+      // workAll: 0,
+      workLine: [],
       search: "",
-      work: ""
+      work: "",
+      // 分页
+      total: 0,
+      pageSize: 6,
+      currentPage: 1,
+      value: true
     };
   },
   methods: {
@@ -94,24 +92,94 @@ export default {
         }
       });
     },
-    // addNewWork() {
-    //   if (this.work === "") return;
-    //   this.workLine.unshift({
-    //     id: id++,
-    //     work: this.work,
-    //     workTime: new Date(),
-    //     workState: "正在写"
-    //   });
-    //   this.work = "";
-    // },
+    addNewWork() {
+      this.$router.push({
+        name: "newWork",
+        path:
+          "/blogWrite/newWork" +
+          "/" +
+          this.colId +
+          "/" +
+          this.$options.methods.randData(),
+        params: {
+          colId: this.colId,
+          articleId: this.$options.methods.randData()
+        }
+      });
+    },
     handleDeleteItem(id) {
-      // let id = this.item.id;
-      this.workLine.splice(
-        this.workLine.findIndex(item => item.id === id),
-        1
-      );
+      if (window.confirm("你确定要删除该文章吗？")) {
+        this.$axios
+          .get("http://localhost:8092/tArticle/deleteById/" + id, {
+            params: {
+              id: id
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            console.log(this.workLine);
+            this.workLine.splice(
+              this.workLine.findIndex(item => item.delId === id),
+              1
+            );
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    // 页面传值
+    handleClick(id) {
+      console.log(id);
+      this.$router.push({
+        name: "newWork",
+        path: "/blogWrite/newWork" + "/" + this.colId + "/" + id,
+        params: {
+          colId: this.colId,
+          articleId: id
+        }
+      });
+    },
+    // 文章随机数id--->文集id+4位随机数
+    randData() {
+      return Math.floor(Math.random() * (999999 - 100000));
+    },
+    // 分页
+    handleSizeChange(size) {
+      this.pagesize = size;
+      this.showTable();
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.workLine = [];
+      this.showTable();
+    },
+    showTable() {
+      this.$axios
+        .get("http://localhost:8092/tArticle/findAllArticle", {
+          params: {
+            articleCorpusId: this.colId,
+            page: this.currentPage,
+            size: 6
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          this.total = resp.data.data.total;
+          this.corpusLength = this.total;
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.workLine.unshift({
+              delId: resp.data.data.list[i].id,
+              id: resp.data.data.list[i].articleId,
+              work: resp.data.data.list[i].articleName,
+              workTime: resp.data.data.list[i].articleTime
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-    // jumpToCollectdeIn() {}
   },
   filters: {
     dateFormat: function(dateStr, pattern = "") {
@@ -143,6 +211,10 @@ export default {
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
       }
     }
+  },
+  mounted() {
+    this.showTable();
+    // return (this.whichCorpus = this.$route.params.newWork);
   }
 };
 </script>

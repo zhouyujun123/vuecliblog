@@ -42,15 +42,20 @@
         <div class="register" v-else>
           <div class="inputArea">
             <i class="zyjFamily">&#xe6ef;</i>
-            <input type="text" placeholder="username" v-model="name" />
+            <input type="text" placeholder="username" v-model="registerName" />
           </div>
           <div class="inputArea">
-            <i class="zyjFamily">&#xe68f;</i>
-            <input type="text" placeholder="cellphone" v-model="cellphone" />
+            <i class="zyjFamily">&#xe678;</i>
+            <input type="text" placeholder="cellphone" v-model="emali" />
+          </div>
+          <div class="inputArea YZM">
+            <i class="zyjFamily">&#xe63f;</i>
+            <input type="text" placeholder="vercode" />
+            <button>获取验证码</button>
           </div>
           <div class="inputArea">
             <i class="zyjFamily">&#xe66c;</i>
-            <input type="password" placeholder="password" v-model="password" />
+            <input type="password" placeholder="password" v-model="registerPSW" />
           </div>
           <div class="joinFoot">
             <button @click="registerFor()">注册</button>
@@ -72,44 +77,63 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "loginRegister",
   data() {
     return {
       isReg: false,
+      // 登录用户名
       name: "",
+      // 登录密码
       password: "",
-      cellphone: ""
+      // 注册用户名
+      registerName: "",
+      // 注册密码
+      registerPSW: "",
+      // 邮箱验证
+      emali: ""
     };
   },
   methods: {
+    ...mapMutations(["changeLogin"]),
+    ...mapMutations(["changeUserId"]),
     logth() {
-      //验证姓名和密码是否与locastorage一致
-      if (
-        localStorage.getItem("name") === this.name &&
-        localStorage.getItem("password") === this.password
-      ) {
-        //清空输入框
-        this.name = "";
-        this.password = "";
-        this.$router.push("/");
+      let _this = this;
+      if (this.name === "" || this.password === "") {
+        alert("账号或密码不能为空");
       } else {
-        alert("用户名或密码不正确");
+        this.$axios
+          .get("http://localhost:8092/login", {
+            params: {
+              username: this.name,
+              password: this.password
+            }
+          })
+          .then(resp => {
+            console.log(resp.data);
+            _this.userToken = resp.data.data.token;
+            _this.userId = resp.data.data.userId;
+            // 将用户token保存到vuex中
+            _this.changeLogin({ Authorization: _this.userToken });
+            _this.changeUserId({ UserId: _this.userId });
+            _this.$router.push("/");
+            alert("登陆成功");
+            // console.log(this.$store.state.UserId);
+            // console.log(this.$store.state.Authorization);
+          })
+          .catch(err => {
+            console.log(err);
+            alert("账号或密码错误");
+            localStorage.removeItem("Authorization");
+            this.$router.push("/loginRegister");
+          });
       }
     },
     regth() {
       this.isReg = true;
     },
-    registerFor() {
-      localStorage.setItem("name", this.name);
-      localStorage.setItem("cellphone", this.cellphone);
-      localStorage.setItem("password", this.password);
-      //清空输入框
-      this.name = "";
-      this.cellphone = "";
-      this.password = "";
-      this.isReg = false;
-    },
+    registerFor() {},
     gotoLogin() {
       this.isReg = false;
     }
@@ -194,9 +218,24 @@ export default {
   background: #e9e7e7;
 }
 /*right*/
+.LRbgc .LRindex .LR_right .YZM {
+  padding-right: 5px !important;
+  width: 292px !important;
+  box-sizing: border-box;
+}
+.LRbgc .LRindex .LR_right .YZM input {
+  width: 137px;
+}
+.LRbgc .LRindex .LR_right .YZM button {
+  width: 100px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #3194d0;
+  color: #fff;
+}
 .LRbgc .LRindex .LR_right {
   width: 360px;
-  padding-top: 140px;
+  padding-top: 110px;
 }
 .LRbgc .LRindex .LR_right .inputArea {
   width: 250px;

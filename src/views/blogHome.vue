@@ -10,9 +10,7 @@
             <div class="the_article">
               <div class="article_left fl">
                 <p>我的一天</p>
-                <p>
-                  文章内容文文章内容文章内容文内容章内容文文章内容文章内容文章内容
-                </p>
+                <p>文章内容文文章内容文章内容文内容章内容文文章内容文章内容文章内容</p>
                 <p>
                   <span>笔者：</span>
                   <span class="con">zyj</span>
@@ -28,8 +26,22 @@
           <div class="loadMore">
             <button>加载更多文章</button>
           </div>
+          <div class="bottom_img">
+            <img src="@/assets/images/bookcase.png" />
+          </div>
         </div>
         <div class="index-right fr">
+          <div class="notice">
+            <!-- <div class="top">
+              <span>系统公告</span>
+              <i class="zyjFamily">&#xe6ef;</i>
+            </div>-->
+            <div class="con">
+              <p class="top">系统公告</p>
+              <p>如果需要使用发布文章等功能，需要先登录哦~</p>
+              <p>账号可以免费注册获得哦！</p>
+            </div>
+          </div>
           <div class="recommend">
             <div class="top">
               <p class="fl">作者推荐</p>
@@ -157,7 +169,7 @@ export default {
 }
 .indexBody .index_left .loadMore {
   margin-top: 30px;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 }
 .indexBody .index_left .loadMore button {
   width: 100%;
@@ -166,10 +178,41 @@ export default {
   padding: 10px 15px;
   color: #fff;
 }
+/* .indexBody .index_left .bottom_img{
+
+} */
+.indexBody .index_left .bottom_img img {
+  width: 100%;
+}
 /*right*/
 .indexBody .index-right {
   width: 280px;
   margin-left: 40px;
+}
+.indexBody .index-right .notice {
+  margin-top: 20px;
+}
+.indexBody .index-right .notice .con .top {
+  padding-left: 70px;
+  /* padding-bottom: 5px; */
+  color: #ea6f5a;
+  font-size: 18px;
+  font-weight: bold;
+}
+.indexBody .index-right .notice .con {
+  background-image: url("../assets/images/anthor.png");
+  background-size: 100% 100%;
+  box-sizing: border-box;
+  height: 200px;
+  padding-top: 40px;
+  padding-left: 12px;
+  padding-right: 22px;
+}
+.indexBody .index-right .notice .con p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-indent: 10px;
 }
 .indexBody .index-right .recommend {
   margin-top: 10px;

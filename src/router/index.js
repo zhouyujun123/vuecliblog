@@ -4,7 +4,15 @@ import blogHome from "../views/blogHome.vue";
 
 Vue.use(VueRouter);
 
-const routes = [{
+const routes = [
+  { path: "*", redirect: "/404", hidden: true },
+  // {
+  //   path: "/404",
+  //   name: "404",
+  //   component: () => import("../views/errorPage/404"),
+  //   hidden: true
+  // },
+  {
     path: "/",
     name: "blogHome",
     component: blogHome,
@@ -60,7 +68,8 @@ const routes = [{
     meta: {
       title: "发布文章-left"
     },
-    children: [{
+    children: [
+      {
         path: "collectedWorks",
         name: "collectedWorks",
         component: () => import("../components/blogWrite/collectedWorks.vue"),
@@ -81,7 +90,7 @@ const routes = [{
     ]
   },
   {
-    path: "/blogWrite/collectedWorks/collectedIn/:id/:newWork",
+    path: "/blogWrite/collectedIn/:id/:newWork",
     name: "collectedIn",
     component: () => import("../views/blogWrite/collectedIn.vue"),
     meta: {
@@ -91,7 +100,7 @@ const routes = [{
     // props: true
   },
   {
-    path: "/blogWrite/collectedWorks/collectedIn/newWork/:colName",
+    path: "/blogWrite/newWork/:colId/:articleId",
     name: "newWork",
     component: () => import("../views/blogWrite/newWork.vue"),
     meta: {
@@ -107,7 +116,8 @@ const routes = [{
       title: "博客搜索"
     },
     redirect: "/blogSearch/searchUsers",
-    children: [{
+    children: [
+      {
         path: "searchUsers",
         name: "searchUsers",
         component: () => import("../components/blogSearch/searchUsers.vue"),
@@ -144,7 +154,8 @@ const routes = [{
       title: "我的主页"
     },
     redirect: "/blogMine/mineMassage",
-    children: [{
+    children: [
+      {
         path: "mineMassage",
         name: "mineMassage",
         component: () =>
@@ -219,7 +230,9 @@ const routes = [{
         path: "peopleCorpus",
         name: "peopleCorpus",
         component: () =>
-          import("../components/blogPeople/peopleMiddle/peopleRight/peopleCorpus.vue"),
+          import(
+            "../components/blogPeople/peopleMiddle/peopleRight/peopleCorpus.vue"
+          ),
         meta: {
           active: "/blogPeople/peopleCorpus",
           title: "用户文集"
@@ -229,7 +242,9 @@ const routes = [{
         path: "peopleArtical",
         name: "peopleArtical",
         component: () =>
-          import("../components/blogPeople/peopleMiddle/peopleRight/peopleArtical.vue"),
+          import(
+            "../components/blogPeople/peopleMiddle/peopleRight/peopleArtical.vue"
+          ),
         meta: {
           active: "/blogPeople/peopleArtical",
           title: "用户文章"
@@ -239,7 +254,9 @@ const routes = [{
         path: "peopleLike",
         name: "peopleLike",
         component: () =>
-          import("../components/blogPeople/peopleMiddle/peopleRight/peopleLike.vue"),
+          import(
+            "../components/blogPeople/peopleMiddle/peopleRight/peopleLike.vue"
+          ),
         meta: {
           active: "/blogPeople/peopleLike",
           title: "用户喜欢"
@@ -253,6 +270,39 @@ const router = new VueRouter({
   // mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+// 导航守卫
+// 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
+router.beforeEach((to, from, next) => {
+  // console.log(1);
+  // if (to.path === "/loginRegister") {
+  //   next();
+  // } else {
+  //   let token = localStorage.getItem("Authorization");
+  //   console.log(token);
+  //   if (token === "null" || token === "") {
+  //     next("/loginRegister");
+  //   } else {
+  //     next();
+  //   }
+  // }
+  //to 要去的路由配置
+  //from 当前的路由配置
+  //next 一定要调用，让to的路由配置继续生效，比如如果去登陆直接next(),否则判断token是否存在，如果存在就next()
+
+  if (to.path === "/loginRegister") return next(); //使用return，不需要写else
+
+  //判断其他页面是否有token
+  const token = localStorage.getItem("Authorization");
+
+  //存在继续往后走
+  if (token) return next();
+
+  // this.$router.push({name:'login'}) #没有this,无法使用
+  router.push({
+    name: "loginRegister"
+  });
 });
 
 export default router;

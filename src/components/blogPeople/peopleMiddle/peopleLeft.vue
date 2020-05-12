@@ -8,7 +8,7 @@
           :class="{ 'activePeople': $route.meta.active === '/blogPeople/peopleCorpus' }"
         >
           <div class="option">
-            <div class="bgcImg_1">
+            <div class="bgcImg">
               <i class="zyjFamily">&#xe62a;</i>
               <span>他的文集</span>
             </div>
@@ -20,7 +20,7 @@
           :class="{ 'activePeople': $route.meta.active === '/blogPeople/peopleArtical' }"
         >
           <div class="option">
-            <div class="bgcImg_2">
+            <div class="bgcImg">
               <i class="zyjFamily">&#xe62a;</i>
               <span>他的文章</span>
             </div>
@@ -32,7 +32,7 @@
           :class="{ 'activePeople': $route.meta.active === '/blogPeople/peopleLike' }"
         >
           <div class="option">
-            <div class="bgcImg_3">
+            <div class="bgcImg">
               <i class="zyjFamily">&#xe62a;</i>
               <span>他的关注</span>
             </div>
@@ -79,37 +79,15 @@ export default {
         font-weight: bold;
       }
 
-      .bgcImg_1 {
+      .bgcImg {
         margin: 0 auto;
         margin-top: 20px;
         width: 180px;
-        height: 75px;
-        box-sizing: border-box;
-        padding-left: 35px;
-        padding-top: 18px;
-        background-image: url('../../../assets/images/button_1.png');
-        background-size: 100% 100%;
-      }
-
-      .bgcImg_2 {
-        margin: 0 auto;
-        width: 180px;
-        height: 70px;
+        height: 60px;
         box-sizing: border-box;
         padding-left: 35px;
         padding-top: 20px;
-        background-image: url('../../../assets/images/button_2.png');
-        background-size: 100% 100%;
-      }
-
-      .bgcImg_3 {
-        margin: 0 auto;
-        width: 180px;
-        height: 65px;
-        box-sizing: border-box;
-        padding-left: 35px;
-        padding-top: 18px;
-        background-image: url('../../../assets/images/button_3.png');
+        background-image: url('../../../assets/images/biaoqian.png');
         background-size: 100% 100%;
       }
     }

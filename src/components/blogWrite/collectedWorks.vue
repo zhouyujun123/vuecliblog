@@ -37,11 +37,20 @@
             <td>{{ item.workTime | dateFormat() }}</td>
             <td>{{ item.workNum }}</td>
             <td>
-              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.id)">&#xe614;</i>
+              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.delId)">&#xe614;</i>
             </td>
           </tr>
         </table>
       </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :hide-on-single-page="value"
+        :page-size="6"
+        layout="prev, pager, next"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -49,34 +58,26 @@
 <script>
 let myData = new Date();
 export default {
+  inject: ["reload"],
   name: "collectedWorks",
   data() {
     return {
       workAll: 0,
       // 文集数量
-      // corpusLength: 0,
+      corpusLength: 0,
       corpusTime: "",
       workLine: [],
       search: "",
-      newWork: ""
+      newWork: "",
+      value: true,
+      // 分页
+      total: 0,
+      pageSize: 6,
+      currentPage: 1
     };
   },
   created: function() {
-    // console.log(this.$options.methods.formatDateTime(myData));
-    this.$axios
-      .get("http://localhost:2325/listAllArticle/" + 1001)
-      .then(resp => {
-        for (var i = 0; i < resp.data.length; i++) {
-          this.workLine.unshift({
-            newWork: resp.data[i].corpusName,
-            workTime: resp.data[i].corpusTime,
-            workNum: resp.data[i].corpusNum
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.showTable();
   },
   methods: {
     // 搜索文集
@@ -89,63 +90,68 @@ export default {
     },
     // 添加文集
     addNewWork() {
-      this.$axios
-        .get("http://localhost:2325/add", {
-          params: {
-            id: this.$options.methods.randData(),
-            name: this.newWork,
-            time: this.$options.methods.formatDateTime(myData),
-            number: 0
-          }
-        })
-        .then(resp => {
-          console.log(resp);
-          if (this.newWork === "") return;
-          this.workLine.unshift({
-            // id: this.$options.methods.randData(),
-            // userId: 1001,
-            newWork: this.newWork,
-            workTime: myData,
-            workNum: 0
+      if (this.newWork === "") {
+        alert("请输入新建的文集名称！");
+      } else {
+        this.$axios
+          .get("http://localhost:8092/tCorpus/addCorpus", {
+            params: {
+              userId: this.$store.state.UserId,
+              corpusId: this.$options.methods.randData(),
+              corpusName: this.newWork,
+              corpusTime: this.$options.methods.formatDateTime(myData),
+              corpusNum: 0
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            this.newWork = "";
+            this.workLine = [];
+            this.showTable();
+          })
+          .catch(err => {
+            console.log(err);
           });
-          this.newWork = "";
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      }
     },
     // 删除文集
-    handleDeleteItem() {
-      // let id = this.item.id;
-      this.$axios
-        .get("http://localhost:2325/test", {
-          params: {
-            // id: this.$options.methods.randData()
-          }
-        })
-        .then(resp => {
-          console.log(resp);
-          // console.log(id);
-          this.workLine.splice(
-            this.workLine.findIndex(item => item.id === resp.data.corpusId),
-            1
-          );
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    handleDeleteItem(id) {
+      if (window.confirm("你确定要删除该文集吗？")) {
+        this.$axios
+          .get("http://localhost:8092/tCorpus/deleteById/" + id, {
+            params: {
+              id: id
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            console.log(this.workLine);
+            this.workLine.splice(
+              this.workLine.findIndex(item => item.delId === id),
+              1
+            );
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        return true;
+      } else {
+        return false;
+      }
     },
     // 页面传值
     handleClick(id, newWork) {
       console.log(id);
       this.$router.push({
-        name: "collectedIn",
+        // name: "collectedIn",
+        path: "/blogWrite/collectedIn" + "/" + id + "/" + newWork,
         params: {
           id: id,
           newWork: newWork
         }
       });
     },
+    // 时间格式转换
     formatDateTime(date) {
       let y = date.getFullYear();
       let m = date.getMonth() + 1;
@@ -160,6 +166,7 @@ export default {
       second = second < 10 ? "0" + second : second;
       return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
     },
+    // 文集随机数id--->日期+4位随机数
     randData() {
       let date = new Date();
       let y = date.getFullYear();
@@ -168,6 +175,45 @@ export default {
       let d = date.getDate();
       d = d < 10 ? "0" + d : d;
       return y + m + d + Math.floor(Math.random() * (9999 - 1000));
+    },
+    // 分页
+    handleSizeChange(size) {
+      this.pagesize = size;
+      this.showTable();
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.workLine = [];
+      this.showTable();
+    },
+    showTable() {
+      this.$axios
+        .get("http://localhost:8092/tCorpus/findAllCorpus", {
+          params: {
+            userId: this.$store.state.UserId,
+            page: this.currentPage,
+            size: 6
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          this.total = resp.data.data.total;
+          this.corpusLength = this.total;
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.workLine.unshift({
+              delId: resp.data.data.list[i].id,
+              id: resp.data.data.list[i].corpusId,
+              newWork: resp.data.data.list[i].corpusName,
+              workTime: resp.data.data.list[i].corpusTime,
+              workNum: resp.data.data.list[i].corpusNum
+            });
+          }
+          // console.log(resp.data.data.list);
+          // console.log(this.total);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   filters: {
@@ -200,7 +246,7 @@ export default {
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
       }
     }
-  },
+  }
   // 数据监听
   // watch: {
   //   workLine: {
@@ -211,13 +257,13 @@ export default {
   //   }
   // },
   // 计算属性
-  computed: {
-    // 计算属性的 getter
-    corpusLength: function() {
-      // `this` 指向 vm 实例
-      return this.workLine.length;
-    }
-  }
+  // computed: {
+  //   // 计算属性的 getter
+  //   corpusLength: function() {
+  //     // `this` 指向 vm 实例
+  //     return this.workLine.length;
+  //   }
+  // }
 };
 </script>
 
@@ -237,9 +283,10 @@ export default {
 
   .gundong {
     height: 100%;
-    overflow-y: scroll;
+    // overflow-y: scroll;
     background-color: #fff;
     border-radius: 10px;
+    position: relative;
   }
 
   .collectde-top {
@@ -351,6 +398,11 @@ export default {
         }
       }
     }
+  }
+
+  .el-pagination {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

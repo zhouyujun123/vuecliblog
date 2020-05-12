@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1964097",
+      "name": "草稿箱",
+      "font_class": "caogaoxiang",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "691057",
+      "name": "男",
+      "font_class": "nan",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "1493224",
+      "name": "女",
+      "font_class": "nv",
+      "unicode": "e6e3",
+      "unicode_decimal": 59107
+    },
+    {
       "icon_id": "478792",
       "name": "我的",
       "font_class": "wode",

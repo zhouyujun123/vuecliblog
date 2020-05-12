@@ -13,9 +13,7 @@
           </div>
         </div>
         <div class="add-collectde">
-          <!-- <router-link :to="{ name: 'newWork' }"> -->
           <button @click="addNewWork()">添加新的文章</button>
-          <!-- </router-link> -->
         </div>
         <div class="collectde-table">
           <table>
@@ -25,14 +23,12 @@
               <td>状态</td>
               <td></td>
             </tr>
-            <!-- <router-link
-            tag="tr"
-            :to="{ name: 'collectedIn' }"
-            class="body"
-            v-for="(item, index) in searchWorks(search)"
-            :key="index"
-            >-->
-            <tr class="body" v-for="(item, index) in searchWorks(search)" :key="index">
+            <tr
+              class="body"
+              v-for="(item, index) in searchWorks(search)"
+              :key="index"
+              @click="handleClick(item.id)"
+            >
               <td>
                 <div class="collectde-line">
                   <i class="zyjFamily">&#xe615;</i>
@@ -40,14 +36,29 @@
                 </div>
               </td>
               <td>{{ item.workTime }}</td>
-              <td>{{ item.workState }}</td>
               <td>
-                <i class="zyjFamily deleteIcon" @click="handleDeleteItem(item.id)">&#xe614;</i>
+                <!-- <button class="release">发布{{ item.workState }}</button> -->
+                <button class="published">已发布{{ item.workState }}</button>
+              </td>
+              <td>
+                <i
+                  class="zyjFamily deleteIcon"
+                  @click.stop="handleDeleteItem(item.delId)"
+                  >&#xe614;</i
+                >
               </td>
             </tr>
-            <!-- </router-link> -->
           </table>
         </div>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :hide-on-single-page="value"
+          :page-size="6"
+          layout="prev, pager, next"
+          :total="total"
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -62,34 +73,18 @@ export default {
   },
   data() {
     return {
-      workLine: [
-        {
-          id: 0,
-          newWork: "zzz",
-          workTime: "2020-04-11 03:04:56",
-          workState: "已发布",
-          content: "123123123123123132"
-        },
-        {
-          id: 1,
-          newWork: "yyy",
-          workTime: "2020-04-11 03:04:56",
-          workState: "未发布",
-          content: "mmmmmmmmmmmmmmmmmmmmmmmmmmmmm"
-        },
-        {
-          id: 2,
-          newWork: "jjj",
-          workTime: "2020-04-11 03:04:56",
-          workState: "已发布",
-          content: "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-        }
-      ],
+      workLine: [],
       search: "",
-      whichCorpus: ""
+      whichCorpus: "",
+      // 分页
+      total: 0,
+      pageSize: 6,
+      currentPage: 1,
+      value: true
     };
   },
   methods: {
+    // 搜索文章
     searchWorks(keywords) {
       return this.workLine.filter(item => {
         if (item.newWork.includes(keywords)) {
@@ -97,24 +92,99 @@ export default {
         }
       });
     },
+    // 删除文章
     handleDeleteItem(id) {
-      this.workLine.splice(
-        this.workLine.findIndex(item => item.id === id),
-        1
-      );
+      if (window.confirm("你确定要删除该文章吗？")) {
+        this.$axios
+          .get("http://localhost:8092/tArticle/deleteById/" + id, {
+            params: {
+              id: id
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            console.log(this.workLine);
+            this.workLine.splice(
+              this.workLine.findIndex(item => item.delId === id),
+              1
+            );
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     },
+    // 添加文章
     addNewWork() {
       this.$router.push({
         name: "newWork",
+        path:
+          "/blogWrite/newWork" +
+          "/" +
+          this.$route.params.id +
+          "/" +
+          this.$options.methods.randData(),
         params: {
-          colName: this.whichCorpus
+          colId: this.$route.params.id,
+          articleId: this.$options.methods.randData()
         }
       });
+    },
+    // 页面传值
+    handleClick(id) {
+      console.log(id);
+      this.$router.push({
+        name: "newWork",
+        path: "/blogWrite/newWork" + "/" + this.$route.params.id + "/" + id,
+        params: {
+          colId: this.$route.params.id,
+          articleId: id
+        }
+      });
+    },
+    // 文章随机数id--->文集id+4位随机数
+    randData() {
+      return Math.floor(Math.random() * (999999 - 100000));
+    },
+    // 分页
+    handleSizeChange(size) {
+      this.pagesize = size;
+      this.showTable();
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.workLine = [];
+      this.showTable();
+    },
+    showTable() {
+      this.$axios
+        .get("http://localhost:8092/tArticle/findAllArticle", {
+          params: {
+            articleCorpusId: this.$route.params.id,
+            page: this.currentPage,
+            size: 6
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          this.total = resp.data.data.total;
+          this.corpusLength = this.total;
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.workLine.unshift({
+              delId: resp.data.data.list[i].id,
+              id: resp.data.data.list[i].articleId,
+              newWork: resp.data.data.list[i].articleName,
+              workTime: resp.data.data.list[i].articleTime
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
-    console.log(this.$route.params.id);
-    console.log(this.$route.params.newWork);
+    this.showTable();
     return (this.whichCorpus = this.$route.params.newWork);
   }
 };
@@ -125,7 +195,6 @@ export default {
   padding: 20px;
   margin-left: 240px;
   background-color: #f5f5f5;
-  // height: 680px;
   box-sizing: border-box;
   position: fixed;
   top: 0;
@@ -221,6 +290,20 @@ export default {
               margin-right: 20px;
             }
           }
+
+          .release {
+            background-color: #ea6f5a;
+            color: #fff;
+            font-size: 14px;
+            border-radius: 5px;
+            padding: 5px 10px;
+          }
+
+          .published {
+            background-color: rgba(0, 0, 0, 0);
+            color: #969696;
+            font-size: 16px;
+          }
         }
 
         &:hover {
@@ -228,6 +311,11 @@ export default {
         }
       }
     }
+  }
+
+  .el-pagination {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>
