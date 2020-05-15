@@ -66,13 +66,13 @@
 <script>
 // let id = 0;
 export default {
-  name: "collectedWorks",
+  name: "works",
   data() {
     return {
       // 文章数量
       corpusLength: 0,
       // 默认文集
-      colId: "000000000000",
+      colId: "0",
       // workAll: 0,
       workLine: [],
       search: "",
@@ -142,7 +142,13 @@ export default {
     },
     // 文章随机数id--->文集id+4位随机数
     randData() {
-      return Math.floor(Math.random() * (999999 - 100000));
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      return y + m + d + Math.floor(Math.random() * (999999 - 100000));
     },
     // 分页
     handleSizeChange(size) {
@@ -158,6 +164,7 @@ export default {
       this.$axios
         .get("http://localhost:8092/tArticle/findAllArticle", {
           params: {
+            articleUserId: this.$store.state.UserId,
             articleCorpusId: this.colId,
             page: this.currentPage,
             size: 6

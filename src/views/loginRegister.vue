@@ -46,12 +46,12 @@
           </div>
           <div class="inputArea">
             <i class="zyjFamily">&#xe678;</i>
-            <input type="text" placeholder="cellphone" v-model="emali" />
+            <input type="text" placeholder="emali" v-model="emali" />
           </div>
           <div class="inputArea YZM">
             <i class="zyjFamily">&#xe63f;</i>
-            <input type="text" placeholder="vercode" />
-            <button>获取验证码</button>
+            <input type="text" placeholder="vercode" v-model="captcha" />
+            <button @click="getYZM()">获取验证码</button>
           </div>
           <div class="inputArea">
             <i class="zyjFamily">&#xe66c;</i>
@@ -92,7 +92,9 @@ export default {
       // 注册密码
       registerPSW: "",
       // 邮箱验证
-      emali: ""
+      emali: "",
+      // 验证码
+      captcha: ""
     };
   },
   methods: {
@@ -104,11 +106,9 @@ export default {
         alert("账号或密码不能为空");
       } else {
         this.$axios
-          .get("http://localhost:8092/login", {
-            params: {
-              username: this.name,
-              password: this.password
-            }
+          .post("http://localhost:8092/login", {
+            username: this.name,
+            password: this.password
           })
           .then(resp => {
             console.log(resp.data);
@@ -125,15 +125,86 @@ export default {
           .catch(err => {
             console.log(err);
             alert("账号或密码错误");
-            localStorage.removeItem("Authorization");
-            this.$router.push("/loginRegister");
           });
       }
     },
     regth() {
       this.isReg = true;
+      this.registerName = "";
+      // 注册密码
+      this.registerPSW = "";
+      // 邮箱验证
+      this.emali = "";
+      // 验证码
+      this.captcha = "";
     },
-    registerFor() {},
+    getYZM() {
+      if (!/^[0-9a-z._]+@[0-9a-z._]+$/.test(this.emali) || this.emali === "") {
+        alert("邮箱格式不正确");
+      } else {
+        // alert("邮箱格式OK");
+        this.$axios
+          .get("http://localhost:8092/getCaptcha", {
+            params: {
+              mailbox: this.emali
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            if (resp.data.resultMsg == "请求失败") {
+              alert(2);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    registerFor() {
+      if (this.registerName == "") {
+        alert("用户名不符合注册要求！");
+      } else if (
+        this.registerPSW == "" ||
+        !/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/.test(this.registerPSW)
+      ) {
+        alert("密码格式错误！");
+      } else if (this.emali == "") {
+        alert("邮箱不能为空！");
+      } else if (this.captcha == "") {
+        alert("验证码不能为空！");
+      } else {
+        this.$axios
+          .get("http://localhost:8092/registered", {
+            params: {
+              username: this.registerName,
+              password: this.registerPSW,
+              mailbox: this.emali,
+              captcha: this.captcha
+            }
+          })
+          .then(resp => {
+            console.log(resp);
+            if (resp.data.resultMsg == "请求失败") {
+              alert("请求失败");
+            } else if (resp.data.resultMsg == "账户已存在") {
+              alert("账户已存在");
+            } else {
+              alert("注册成功");
+              this.registerName = "";
+              // 注册密码
+              this.registerPSW = "";
+              // 邮箱验证
+              this.emali = "";
+              // 验证码
+              this.captcha = "";
+              this.isReg = false;
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
     gotoLogin() {
       this.isReg = false;
     }

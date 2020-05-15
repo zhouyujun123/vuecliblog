@@ -6,25 +6,30 @@
     <div class="indexBody">
       <div class="counter">
         <div class="index_left fl">
-          <router-link to="blogArticle">
-            <div class="the_article">
-              <div class="article_left fl">
-                <p>我的一天</p>
-                <p>文章内容文文章内容文章内容文内容章内容文文章内容文章内容文章内容</p>
-                <p>
-                  <span>笔者：</span>
-                  <span class="con">zyj</span>
-                  <span>发布于：</span>
-                  <span class="con">2019-11</span>
-                </p>
-              </div>
-              <div class="article_right fr">
-                <img src="../assets/images/pig.jpg" />
-              </div>
+          <!-- <router-link to="blogArticle"> -->
+          <div
+            class="the_article"
+            v-for="(item, index) in articleList"
+            :key="index"
+            @click="handleClick(item.articleId)"
+          >
+            <div class="article_left fl">
+              <p>{{ item.articleName }}</p>
+              <p>{{ item.articleCon }}</p>
+              <p>
+                <span>笔者：</span>
+                <span class="con">{{ item.author }}</span>
+                <span>发布于：</span>
+                <span class="con">{{ item.upTime }}</span>
+              </p>
             </div>
-          </router-link>
+            <div class="article_right fr">
+              <img src="../assets/images/pig.jpg" />
+            </div>
+          </div>
+          <!-- </router-link> -->
           <div class="loadMore">
-            <button>加载更多文章</button>
+            <button @click="moreArticle()">加载更多文章</button>
           </div>
           <div class="bottom_img">
             <img src="@/assets/images/bookcase.png" />
@@ -88,9 +93,82 @@ import blogFoot from "@/components/blogFoot.vue";
 
 export default {
   name: "blogHome",
+  data() {
+    return {
+      articleList: [
+        // {
+        //   articleName: "我的",
+        //   articleCon: "22222",
+        //   author: "333333",
+        //   upTime: "444444"
+        // }
+      ],
+      // 模拟页码
+      currentPage: 1,
+      search: ""
+    };
+  },
   components: {
     blogHead,
     blogFoot
+  },
+  methods: {
+    // 搜索文章
+    searchWorks() {
+      // return this.workLine.filter(item => {
+      //   if (item.newWork.includes(keywords)) {
+      //     return item;
+      //   }
+      // });
+    },
+    handleClick(id) {
+      console.log(id);
+      this.$router.push({
+        // name: "newWork",
+        path: "/blogArticle" + "/" + id,
+        params: {
+          colId: "000000000000",
+          articleId: id
+        }
+      });
+    },
+    moreArticle() {
+      // this.showTable();
+      this.currentPage++;
+      console.log(this.currentPage);
+    },
+    showTable() {
+      console.log(1);
+      this.$axios
+        .get("http://localhost:8092/tArticle/findAllArticle", {
+          params: {
+            // articleCorpusId: this.$route.params.id,
+            page: this.currentPage,
+            size: 6
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          // this.total = resp.data.data.total;
+          // this.corpusLength = this.total;
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.articleList.unshift({
+              articleId: resp.data.data.list[i].articleId,
+              author: resp.data.data.list[i].articleAuthor,
+              articleName: resp.data.data.list[i].articleName,
+              upTime: resp.data.data.list[i].articleTime,
+              articleCon: resp.data.data.list[i].articleContent
+            });
+          }
+          console.log(this.articleList);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
+  created() {
+    this.showTable();
   }
 };
 </script>

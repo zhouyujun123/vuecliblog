@@ -1,6 +1,6 @@
 <template>
   <div>
-    <write-left></write-left>
+    <new-work-left></new-work-left>
     <div class="new-work">
       <div class="gundong">
         <div class="newWorkName">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import writeLeft from "@/components/blogWrite/writeLeft.vue";
+import newWorkLeft from "@/components/blogWrite/newWorkLeft.vue";
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
@@ -27,7 +27,7 @@ let myData = new Date();
 export default {
   name: "newWork",
   components: {
-    writeLeft,
+    newWorkLeft,
     mavonEditor
   },
   data() {
@@ -128,7 +128,7 @@ export default {
 .new-work {
   z-index: 999;
   padding: 20px;
-  padding-left: 260px;
+  padding-left: 80px;
   background-color: #f5f5f5;
   box-sizing: border-box;
   position: fixed;

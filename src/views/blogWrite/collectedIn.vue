@@ -37,7 +37,6 @@
               </td>
               <td>{{ item.workTime }}</td>
               <td>
-                <!-- <button class="release">发布{{ item.workState }}</button> -->
                 <button class="published">已发布{{ item.workState }}</button>
               </td>
               <td>
@@ -144,7 +143,13 @@ export default {
     },
     // 文章随机数id--->文集id+4位随机数
     randData() {
-      return Math.floor(Math.random() * (999999 - 100000));
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      return y + m + d + Math.floor(Math.random() * (999999 - 100000));
     },
     // 分页
     handleSizeChange(size) {

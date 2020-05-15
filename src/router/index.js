@@ -25,9 +25,17 @@ const routes = [
     name: "loginRegister",
     component: () => import("../views/loginRegister.vue"),
     meta: {
-      title: "登录注册"
+      title: "登录"
     }
   },
+  // {
+  //   path: "/loginRegister",
+  //   name: "loginRegister",
+  //   component: () => import("../views/loginRegister.vue"),
+  //   meta: {
+  //     title: "注册"
+  //   }
+  // },
   {
     path: "/reset",
     name: "reset",
@@ -45,7 +53,7 @@ const routes = [
     }
   },
   {
-    path: "/blogArticle",
+    path: "/blogArticle/:articleId",
     name: "blogArticle",
     component: () => import("../views/blogArticle.vue"),
     meta: {
@@ -275,7 +283,6 @@ const router = new VueRouter({
 // 导航守卫
 // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
 router.beforeEach((to, from, next) => {
-  // console.log(1);
   // if (to.path === "/loginRegister") {
   //   next();
   // } else {

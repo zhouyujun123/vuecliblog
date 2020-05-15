@@ -4,21 +4,25 @@
       <p class="fl">一个博客</p>
       <ul class="fl">
         <router-link to="/">
-          <li class="fl"><i class="zyjFamily">&#xe74b;</i>首页</li>
+          <li class="fl">
+            <i class="zyjFamily">&#xe74b;</i>首页
+          </li>
         </router-link>
-        <li class="fl"><i class="zyjFamily">&#xe601;</i>APP</li>
+        <li class="fl">
+          <i class="zyjFamily">&#xe601;</i>APP
+        </li>
       </ul>
       <div class="search fl">
         <div class="search_bgc">
-          <input type="text" placeholder="搜索" />
-          <router-link :to="{ name: 'blogSearch' }">
-            <button>
-              <i class="zyjFamily">&#xe65b;</i>
-            </button>
-          </router-link>
+          <input type="text" placeholder="搜索" v-model="searchAll" @keyup.enter="jump()" />
+          <!-- <router-link :to="{ name: 'blogSearch' }"> -->
+          <button @click="jump()">
+            <i class="zyjFamily">&#xe65b;</i>
+          </button>
+          <!-- </router-link> -->
         </div>
       </div>
-      <div class="my fr">
+      <div class="my fr" v-if="showMe">
         <img src="../assets/images/headPhoto2.png" />
         <div class="drop_downBox">
           <router-link :to="{ name: 'blogMine' }">
@@ -37,13 +41,13 @@
             <i class="zyjFamily">&#xe611;</i>
             <span>账号设置</span>
           </div>
-          <div class="options">
+          <div class="options" @click="outThisUser()">
             <i class="zyjFamily">&#xe744;</i>
             <span>退出该账号</span>
           </div>
         </div>
       </div>
-      <router-link :to="{ name: 'loginRegister' }">
+      <router-link :to="{ name: 'loginRegister' }" v-else>
         <button class="fr loginBth">登录 / 注册</button>
       </router-link>
     </div>
@@ -52,7 +56,37 @@
 
 <script>
 export default {
-  name: "blogHead"
+  name: "blogHead",
+  data() {
+    return {
+      searchAll: "",
+      showMe: false
+    };
+  },
+  methods: {
+    jump() {
+      this.$router.push({
+        name: "blogSearch"
+      });
+      localStorage.setItem("searchKey", this.searchAll);
+    },
+    show() {
+      if (this.$store.state.Authorization == "") {
+        // alert(1);
+        this.showMe = false;
+      } else {
+        this.showMe = true;
+      }
+    },
+    outThisUser() {
+      localStorage.removeItem("Authorization");
+      localStorage.removeItem("UserId");
+      this.$router.push("/loginRegister");
+    }
+  },
+  created: function() {
+    this.show();
+  }
 };
 </script>
 

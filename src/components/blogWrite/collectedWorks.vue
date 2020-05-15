@@ -174,7 +174,7 @@ export default {
       m = m < 10 ? "0" + m : m;
       let d = date.getDate();
       d = d < 10 ? "0" + d : d;
-      return y + m + d + Math.floor(Math.random() * (9999 - 1000));
+      return y + m + d + Math.floor(Math.random() * (99 - 10));
     },
     // 分页
     handleSizeChange(size) {
