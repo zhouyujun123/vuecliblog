@@ -46,14 +46,6 @@ export default {
           userArtical: "456", // 文章
           userCorpus: "123", // 文集
           userGet: "get" // 是否关注
-        },
-        {
-          userName: "zyj", // 用户名
-          userIntrduct: "123456789789456123", // 用户介绍
-          userFans: "233", // 粉丝
-          userArtical: "456", // 文章
-          userCorpus: "123", // 文集
-          userGet: "get" // 是否关注
         }
       ]
     };

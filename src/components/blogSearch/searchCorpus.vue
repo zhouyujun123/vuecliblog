@@ -5,7 +5,7 @@
       v-for="(item, index) in corpusList"
       :key="index"
     >
-      <div class="corpus" >
+      <div class="corpus">
         <div class="left">
           <img src="@/assets/images/book.png" />
           <div class="detail">

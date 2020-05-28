@@ -27,7 +27,7 @@
       <div class="LR_right fl">
         <div class="login" v-if="!isReg">
           <div class="inputArea">
-            <i class="zyjFamily">&#xe68f;</i>
+            <i class="zyjFamily">&#xe6ef;</i>
             <input type="text" placeholder="username" v-model="name" />
           </div>
           <div class="inputArea">
@@ -78,6 +78,7 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { get, post } from "@/axios/axios.js";
 export default {
   name: "loginRegister",
   data() {
@@ -105,26 +106,24 @@ export default {
       if (this.name === "" || this.password === "") {
         alert("账号或密码不能为空");
       } else {
-        this.$axios
-          .post("http://localhost:8092/login", {
-            username: this.name,
-            password: this.password
-          })
+        let data = {
+          username: this.name,
+          password: this.password
+        };
+        post("/login", data)
           .then(resp => {
-            console.log(resp.data);
-            _this.userToken = resp.data.data.token;
+            console.log(resp);
+            _this.userToken = resp.headers.token;
             _this.userId = resp.data.data.userId;
             // 将用户token保存到vuex中
             _this.changeLogin({ Authorization: _this.userToken });
             _this.changeUserId({ UserId: _this.userId });
             _this.$router.push("/");
             alert("登陆成功");
-            // console.log(this.$store.state.UserId);
-            // console.log(this.$store.state.Authorization);
           })
           .catch(err => {
             console.log(err);
-            alert("账号或密码错误");
+            alert("接口返回数据失败");
           });
       }
     },
@@ -143,12 +142,10 @@ export default {
         alert("邮箱格式不正确");
       } else {
         // alert("邮箱格式OK");
-        this.$axios
-          .get("http://localhost:8092/getCaptcha", {
-            params: {
-              mailbox: this.emali
-            }
-          })
+        let data = {
+          mailbox: this.emali
+        };
+        get("/getCaptcha", data)
           .then(resp => {
             console.log(resp);
             if (resp.data.resultMsg == "请求失败") {
@@ -173,15 +170,13 @@ export default {
       } else if (this.captcha == "") {
         alert("验证码不能为空！");
       } else {
-        this.$axios
-          .get("http://localhost:8092/registered", {
-            params: {
-              username: this.registerName,
-              password: this.registerPSW,
-              mailbox: this.emali,
-              captcha: this.captcha
-            }
-          })
+        let data = {
+          username: this.registerName,
+          password: this.registerPSW,
+          mailbox: this.emali,
+          captcha: this.captcha
+        };
+        post("/registered", data)
           .then(resp => {
             console.log(resp);
             if (resp.data.resultMsg == "请求失败") {
@@ -207,6 +202,10 @@ export default {
     },
     gotoLogin() {
       this.isReg = false;
+      // 登录用户名
+      this.name = "";
+      // 登录密码
+      this.password = "";
     }
   }
 };

@@ -19,7 +19,7 @@
           <tr class="head">
             <td>文集名称</td>
             <td>更新时间</td>
-            <td>文章数量</td>
+            <td>状态</td>
             <td></td>
           </tr>
           <tr
@@ -34,10 +34,10 @@
                 <span>{{ item.newWork }}</span>
               </div>
             </td>
-            <td>{{ item.workTime | dateFormat() }}</td>
-            <td>{{ item.workNum }}</td>
+            <td>{{ item.workTime | dateFormatMore() }}</td>
+            <td>{{ item.workState }}</td>
             <td>
-              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.delId)">&#xe614;</i>
+              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.id)">&#xe614;</i>
             </td>
           </tr>
         </table>
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { get, post } from "@/axios/axios.js";
 let myData = new Date();
 export default {
   inject: ["reload"],
@@ -90,24 +91,26 @@ export default {
     },
     // 添加文集
     addNewWork() {
+      console.log(1);
       if (this.newWork === "") {
         alert("请输入新建的文集名称！");
       } else {
-        this.$axios
-          .get("http://localhost:8092/tCorpus/addCorpus", {
-            params: {
-              userId: this.$store.state.UserId,
-              corpusId: this.$options.methods.randData(),
-              corpusName: this.newWork,
-              corpusTime: this.$options.methods.formatDateTime(myData),
-              corpusNum: 0
-            }
-          })
+        let data = {
+          userId: this.$store.state.UserId,
+          corpusName: this.newWork,
+          corpusCreateTime: this.$options.methods.formatDateTime(myData)
+          // corpusNum: 0
+        };
+        post("/tCorpus/addCorpus", data)
           .then(resp => {
             console.log(resp);
-            this.newWork = "";
-            this.workLine = [];
-            this.showTable();
+            if (resp.data.resultCode == 5000) {
+              alert("添加文集失败！");
+            } else if (resp.data.resultCode == 2000) {
+              this.newWork = "";
+              this.workLine = [];
+              this.showTable();
+            }
           })
           .catch(err => {
             console.log(err);
@@ -117,17 +120,12 @@ export default {
     // 删除文集
     handleDeleteItem(id) {
       if (window.confirm("你确定要删除该文集吗？")) {
-        this.$axios
-          .get("http://localhost:8092/tCorpus/deleteById/" + id, {
-            params: {
-              id: id
-            }
-          })
+        get("/tCorpus/deleteById/" + id, { id: id })
           .then(resp => {
             console.log(resp);
             console.log(this.workLine);
             this.workLine.splice(
-              this.workLine.findIndex(item => item.delId === id),
+              this.workLine.findIndex(item => item.id === id),
               1
             );
           })
@@ -143,7 +141,6 @@ export default {
     handleClick(id, newWork) {
       console.log(id);
       this.$router.push({
-        // name: "collectedIn",
         path: "/blogWrite/collectedIn" + "/" + id + "/" + newWork,
         params: {
           id: id,
@@ -167,15 +164,15 @@ export default {
       return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
     },
     // 文集随机数id--->日期+4位随机数
-    randData() {
-      let date = new Date();
-      let y = date.getFullYear();
-      let m = date.getMonth() + 1;
-      m = m < 10 ? "0" + m : m;
-      let d = date.getDate();
-      d = d < 10 ? "0" + d : d;
-      return y + m + d + Math.floor(Math.random() * (99 - 10));
-    },
+    // randData() {
+    //   let date = new Date();
+    //   let y = date.getFullYear();
+    //   let m = date.getMonth() + 1;
+    //   m = m < 10 ? "0" + m : m;
+    //   let d = date.getDate();
+    //   d = d < 10 ? "0" + d : d;
+    //   return y + m + d + Math.floor(Math.random() * (99 - 10));
+    // },
     // 分页
     handleSizeChange(size) {
       this.pagesize = size;
@@ -187,83 +184,31 @@ export default {
       this.showTable();
     },
     showTable() {
-      this.$axios
-        .get("http://localhost:8092/tCorpus/findAllCorpus", {
-          params: {
-            userId: this.$store.state.UserId,
-            page: this.currentPage,
-            size: 6
-          }
-        })
+      let data = {
+        userId: this.$store.state.UserId,
+        page: this.currentPage,
+        size: 6
+      };
+      get("/tCorpus/findAllCorpus", data)
         .then(resp => {
           console.log(resp);
           this.total = resp.data.data.total;
           this.corpusLength = this.total;
           for (let i = 0; i < resp.data.data.list.length; i++) {
             this.workLine.unshift({
-              delId: resp.data.data.list[i].id,
-              id: resp.data.data.list[i].corpusId,
+              id: resp.data.data.list[i].id,
+              // corpusId: resp.data.data.list[i].corpusId,
               newWork: resp.data.data.list[i].corpusName,
-              workTime: resp.data.data.list[i].corpusTime,
-              workNum: resp.data.data.list[i].corpusNum
+              workTime: resp.data.data.list[i].corpusCreateTime
+              // workNum: resp.data.data.list[i].corpusNum
             });
           }
-          // console.log(resp.data.data.list);
-          // console.log(this.total);
         })
         .catch(err => {
           console.log(err);
         });
     }
-  },
-  filters: {
-    dateFormat: function(dateStr, pattern = "") {
-      var dt = new Date(dateStr);
-      var y = dt.getFullYear();
-      // ES6字符串新方法padStart在开始位置补位，padEnd在结束位置补位
-      var m = (dt.getMonth() + 1).toString().padStart(2, "0");
-      var d = dt
-        .getDate()
-        .toString()
-        .padStart(2, "0");
-
-      if (pattern.toLowerCase() === "yyyy-mm-dd") {
-        return `${y}-${m}-${d}`;
-      } else {
-        var hh = dt
-          .getHours()
-          .toString()
-          .padStart(2, "0");
-        var mm = dt
-          .getMinutes()
-          .toString()
-          .padStart(2, "0");
-        var ss = dt
-          .getSeconds()
-          .toString()
-          .padStart(2, "0");
-
-        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-      }
-    }
   }
-  // 数据监听
-  // watch: {
-  //   workLine: {
-  //     deep: true,
-  //     handler() {
-  //       this.corpusLength = this.workLine.length;
-  //     }
-  //   }
-  // },
-  // 计算属性
-  // computed: {
-  //   // 计算属性的 getter
-  //   corpusLength: function() {
-  //     // `this` 指向 vm 实例
-  //     return this.workLine.length;
-  //   }
-  // }
 };
 </script>
 

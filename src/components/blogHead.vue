@@ -15,15 +15,13 @@
       <div class="search fl">
         <div class="search_bgc">
           <input type="text" placeholder="搜索" v-model="searchAll" @keyup.enter="jump()" />
-          <!-- <router-link :to="{ name: 'blogSearch' }"> -->
-          <button @click="jump()">
+          <button @click.enter="jump()">
             <i class="zyjFamily">&#xe65b;</i>
           </button>
-          <!-- </router-link> -->
         </div>
       </div>
       <div class="my fr" v-if="showMe">
-        <img src="../assets/images/headPhoto2.png" />
+        <img :src="imgSrc" />
         <div class="drop_downBox">
           <router-link :to="{ name: 'blogMine' }">
             <div class="options">
@@ -37,10 +35,12 @@
               <span>写文章</span>
             </div>
           </router-link>
-          <div class="options">
-            <i class="zyjFamily">&#xe611;</i>
-            <span>账号设置</span>
-          </div>
+          <router-link :to="{ name: 'mineSetting' }">
+            <div class="options">
+              <i class="zyjFamily">&#xe611;</i>
+              <span>账号设置</span>
+            </div>
+          </router-link>
           <div class="options" @click="outThisUser()">
             <i class="zyjFamily">&#xe744;</i>
             <span>退出该账号</span>
@@ -60,19 +60,24 @@ export default {
   data() {
     return {
       searchAll: "",
-      showMe: false
+      showMe: false,
+      imgSrc: require("@/assets/images/headPhoto.png")
     };
+  },
+  props: {
+    pullSearchKey: String
   },
   methods: {
     jump() {
       this.$router.push({
-        name: "blogSearch"
+        name: "blogSearch",
+        query: {
+          searchKey: this.searchAll
+        }
       });
-      localStorage.setItem("searchKey", this.searchAll);
     },
     show() {
       if (this.$store.state.Authorization == "") {
-        // alert(1);
         this.showMe = false;
       } else {
         this.showMe = true;
@@ -82,10 +87,14 @@ export default {
       localStorage.removeItem("Authorization");
       localStorage.removeItem("UserId");
       this.$router.push("/loginRegister");
-    }
+    },
+    // 读取图片
+    readHeadImg() {}
   },
-  created: function() {
+  created() {
     this.show();
+    this.searchAll = this.pullSearchKey;
+    console.log(this.pullSearchKey);
   }
 };
 </script>
@@ -99,7 +108,7 @@ export default {
   box-shadow: 5px 5px 5px #eee;
   position: fixed;
   overflow: visible;
-  z-index: 999;
+  z-index: 10000;
 }
 
 .blogHead {

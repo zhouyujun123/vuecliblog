@@ -10,18 +10,9 @@
               <i class="zyjFamily">&#xe65b;</i>
             </button>
           </div>
-          <button class="newWork" @click="addNewWork()">新文章</button>
+          <button class="newWork" @click="addNewWork(0)">新文章</button>
         </div>
       </div>
-      <!-- <div class="add-collectde">
-        <input
-          @keyup.enter="addNewWork()"
-          type="text"
-          placeholder="请输入新的文集标题"
-          v-model="work"
-        />
-        <button @click="addNewWork()">新文章</button>
-      </div>-->
       <div class="collectde-table">
         <table>
           <tr class="head">
@@ -43,9 +34,9 @@
               </div>
             </td>
             <td>{{ item.workTime | dateFormat() }}</td>
-            <td>{{ item.workState }}</td>
+            <td :class="[item.workState ? 'activeColor' : '']">{{ item.workState ? "已发布" : "未发布" }}</td>
             <td>
-              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.delId)">&#xe614;</i>
+              <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.id)">&#xe614;</i>
             </td>
           </tr>
         </table>
@@ -64,7 +55,7 @@
 </template>
 
 <script>
-// let id = 0;
+import { get } from "@/axios/axios.js";
 export default {
   name: "works",
   data() {
@@ -92,34 +83,27 @@ export default {
         }
       });
     },
-    addNewWork() {
+    addNewWork(id) {
+      console.log(this.colId);
       this.$router.push({
         name: "newWork",
-        path:
-          "/blogWrite/newWork" +
-          "/" +
-          this.colId +
-          "/" +
-          this.$options.methods.randData(),
+        path: "/blogWrite/newWork" + "/" + this.colId + "/" + id,
         params: {
           colId: this.colId,
-          articleId: this.$options.methods.randData()
+          articleId: id
         }
       });
     },
     handleDeleteItem(id) {
       if (window.confirm("你确定要删除该文章吗？")) {
-        this.$axios
-          .get("http://localhost:8092/tArticle/deleteById/" + id, {
-            params: {
-              id: id
-            }
-          })
+        get("/tArticle/deleteById/" + id, {
+          id: id
+        })
           .then(resp => {
             console.log(resp);
-            console.log(this.workLine);
+            // console.log(this.workLine);
             this.workLine.splice(
-              this.workLine.findIndex(item => item.delId === id),
+              this.workLine.findIndex(item => item.id === id),
               1
             );
           })
@@ -161,25 +145,23 @@ export default {
       this.showTable();
     },
     showTable() {
-      this.$axios
-        .get("http://localhost:8092/tArticle/findAllArticle", {
-          params: {
-            articleUserId: this.$store.state.UserId,
-            articleCorpusId: this.colId,
-            page: this.currentPage,
-            size: 6
-          }
-        })
+      let data = {
+        userId: this.$store.state.UserId,
+        articleCorpusId: 0,
+        page: this.currentPage,
+        size: 6
+      };
+      get("/tArticle/findAllArticle", data)
         .then(resp => {
           console.log(resp);
           this.total = resp.data.data.total;
           this.corpusLength = this.total;
           for (let i = 0; i < resp.data.data.list.length; i++) {
             this.workLine.unshift({
-              delId: resp.data.data.list[i].id,
-              id: resp.data.data.list[i].articleId,
+              id: resp.data.data.list[i].id,
               work: resp.data.data.list[i].articleName,
-              workTime: resp.data.data.list[i].articleTime
+              workTime: resp.data.data.list[i].articleCreateTime,
+              workState: resp.data.data.list[i].articleState
             });
           }
         })
@@ -188,40 +170,8 @@ export default {
         });
     }
   },
-  filters: {
-    dateFormat: function(dateStr, pattern = "") {
-      var dt = new Date(dateStr);
-      var y = dt.getFullYear();
-      // ES6字符串新方法padStart在开始位置补位，padEnd在结束位置补位
-      var m = (dt.getMonth() + 1).toString().padStart(2, "0");
-      var d = dt
-        .getDate()
-        .toString()
-        .padStart(2, "0");
-
-      if (pattern.toLowerCase() === "yyyy-mm-dd") {
-        return `${y}-${m}-${d}`;
-      } else {
-        var hh = dt
-          .getHours()
-          .toString()
-          .padStart(2, "0");
-        var mm = dt
-          .getMinutes()
-          .toString()
-          .padStart(2, "0");
-        var ss = dt
-          .getSeconds()
-          .toString()
-          .padStart(2, "0");
-
-        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-      }
-    }
-  },
   mounted() {
     this.showTable();
-    // return (this.whichCorpus = this.$route.params.newWork);
   }
 };
 </script>
@@ -334,6 +284,10 @@ export default {
           }
         }
 
+        .activeColor {
+          color: #ea6f5a;
+        }
+
         &:hover {
           background-color: #fafafa;
 
@@ -343,6 +297,10 @@ export default {
         }
       }
     }
+  }
+
+  .el-button {
+    padding: 8px 10px;
   }
 }
 </style>

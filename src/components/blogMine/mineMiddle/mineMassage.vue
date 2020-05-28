@@ -19,11 +19,7 @@
     <dl>
       <dt>出生年份：</dt>
       <dd>
-        <el-date-picker
-          v-model="years"
-          type="year"
-          placeholder="选择年份"
-        ></el-date-picker>
+        <el-date-picker v-model="years" type="year" placeholder="选择年份"></el-date-picker>
       </dd>
     </dl>
     <dl>
@@ -36,13 +32,8 @@
       <dt>修改头像：</dt>
       <dd>
         <div class="noimg">
-          <img :src="imgStr" />
-          <input
-            type="file"
-            class="inputImg"
-            accept="image/*"
-            @change="onchangeImgFun"
-          />
+          <img :src="imgSrc" />
+          <input type="file" class="inputImg" accept="image/*" @change="onchangeImgFun" />
         </div>
       </dd>
     </dl>
@@ -51,14 +42,14 @@
   <!-- "../../../assets/images/headPhoto.png" -->
 </template>
 <script>
-// eslint-disable-next-line no-unused-vars
+import axios from "axios";
 import $ from "jquery";
 export default {
   name: "mineMassage",
   data() {
     return {
       years: "",
-      imgStr: require("../../../assets/images/headPhoto.png"),
+      imgSrc: require("@/assets/images/headPhoto.png"),
       errorStr: "",
       inputName: "",
       inputIntrduct: "",
@@ -74,31 +65,29 @@ export default {
     //头像选择
     onchangeImgFun(e) {
       var file = e.target.files[0];
-      console.log(file);
+      var formFile = new FormData(); // FormData 对象
+      formFile.append("files", file); // 文件对象
       // 获取图片的大小，做大小限制有用
       let imgSize = file.size;
-      console.log(imgSize);
-      var _this = this; // this指向问题，所以在外面先定义
+      var _this = this;
       // 比如上传头像限制5M大小，这里获取的大小单位是b
       if (imgSize <= 50 * 1024) {
         // 合格
         _this.errorStr = "";
         console.log("大小合适");
-        // 开始渲染选择的图片
-        // 本地路径方法 1
-        // this.imgStr = window.URL.createObjectURL(e.target.files[0])
-        // console.log(window.URL.createObjectURL(e.target.files[0])) // 获取当前文件的信息
-
-        // base64方法 2
-        var reader = new FileReader();
-        reader.readAsDataURL(file); // 读出 base64
-        reader.onloadend = function() {
-          // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
-          var dataURL = reader.result;
-          console.log(dataURL);
-          _this.imgStr = dataURL;
-          // 下面逻辑处理
-        };
+        // 下面逻辑处理
+        axios({
+          url: "http://localhost:8092/tImg/uploadFile",
+          method: "post",
+          data: formFile,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            token: localStorage.getItem("Authorization")
+          }
+        }).then(url => {
+          console.log(url.data.data[0]);
+          this.imgSrc = url.data.data[0];
+        });
       } else {
         console.log("大小不合适");
         _this.errorStr = "图片大小超出范围";

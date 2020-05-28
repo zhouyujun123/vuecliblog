@@ -1,25 +1,54 @@
 <template>
   <div class="mineCorpus">
-    <div class="corpus">
+    <div class="corpus" v-for="(item, index) in mineCorpusList" :key="index">
       <div class="left">
         <img src="../../../assets/images/book2.png" />
         <div class="detail">
-          <p>1234598</p>
+          <p>{{ item.corpusName }}</p>
           <p>
-            <span>123456</span>
+            <span>{{ item.corpusPay }}</span>
             人关注
           </p>
         </div>
       </div>
-      <!-- <div class="right">
-        <button class="get">取消关注</button>
-      </div> -->
     </div>
   </div>
 </template>
 <script>
+import { get } from "@/axios/axios.js";
 export default {
-  name: "mineCorpus"
+  name: "mineCorpus",
+  data() {
+    return {
+      mineCorpusList: []
+    };
+  },
+  created() {
+    this.showMineArtical();
+  },
+  methods: {
+    showMineArtical() {
+      let data = {
+        userId: this.$store.state.UserId,
+        // articleState: 1,
+        page: 1,
+        size: 6
+      };
+      get("/tCorpus/findAllCorpus", data)
+        .then(resp => {
+          console.log(resp);
+          this.total = resp.data.data.total;
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.mineCorpusList.push({
+              corpusName: resp.data.data.list[i].corpusName
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }
 };
 </script>
 

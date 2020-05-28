@@ -36,13 +36,13 @@
                 </div>
               </td>
               <td>{{ item.workTime }}</td>
-              <td>
-                <button class="published">已发布{{ item.workState }}</button>
+              <td :class="[item.workState ? 'activeColor' : '']">
+                {{ item.workState ? "已发布" : "未发布" }}
               </td>
               <td>
                 <i
                   class="zyjFamily deleteIcon"
-                  @click.stop="handleDeleteItem(item.delId)"
+                  @click.stop="handleDeleteItem(item.id)"
                   >&#xe614;</i
                 >
               </td>
@@ -65,6 +65,7 @@
 
 <script>
 import writeLeft from "@/components/blogWrite/writeLeft.vue";
+import { get } from "@/axios/axios.js";
 export default {
   name: "collectedIn",
   components: {
@@ -94,17 +95,11 @@ export default {
     // 删除文章
     handleDeleteItem(id) {
       if (window.confirm("你确定要删除该文章吗？")) {
-        this.$axios
-          .get("http://localhost:8092/tArticle/deleteById/" + id, {
-            params: {
-              id: id
-            }
-          })
+        get("/tArticle/deleteById/" + id, { id: id })
           .then(resp => {
             console.log(resp);
-            console.log(this.workLine);
             this.workLine.splice(
-              this.workLine.findIndex(item => item.delId === id),
+              this.workLine.findIndex(item => item.id === id),
               1
             );
           })
@@ -117,15 +112,10 @@ export default {
     addNewWork() {
       this.$router.push({
         name: "newWork",
-        path:
-          "/blogWrite/newWork" +
-          "/" +
-          this.$route.params.id +
-          "/" +
-          this.$options.methods.randData(),
+        path: "/blogWrite/newWork" + "/" + this.$route.params.id + "/" + 0,
         params: {
           colId: this.$route.params.id,
-          articleId: this.$options.methods.randData()
+          articleId: 0
         }
       });
     },
@@ -162,24 +152,22 @@ export default {
       this.showTable();
     },
     showTable() {
-      this.$axios
-        .get("http://localhost:8092/tArticle/findAllArticle", {
-          params: {
-            articleCorpusId: this.$route.params.id,
-            page: this.currentPage,
-            size: 6
-          }
-        })
+      let data = {
+        articleCorpusId: this.$route.params.id,
+        page: this.currentPage,
+        size: 6
+      };
+      get("/tArticle/findAllArticle", data)
         .then(resp => {
           console.log(resp);
           this.total = resp.data.data.total;
           this.corpusLength = this.total;
           for (let i = 0; i < resp.data.data.list.length; i++) {
             this.workLine.unshift({
-              delId: resp.data.data.list[i].id,
-              id: resp.data.data.list[i].articleId,
+              id: resp.data.data.list[i].id,
               newWork: resp.data.data.list[i].articleName,
-              workTime: resp.data.data.list[i].articleTime
+              workTime: resp.data.data.list[i].articleCreateTime,
+              workState: resp.data.data.list[i].articleState
             });
           }
         })
@@ -309,6 +297,10 @@ export default {
             color: #969696;
             font-size: 16px;
           }
+        }
+
+        .activeColor {
+          color: #ea6f5a;
         }
 
         &:hover {

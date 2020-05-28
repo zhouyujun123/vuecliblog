@@ -2,7 +2,7 @@
   <div class="blog-write-left">
     <div class="write-left">
       <div class="whoWrite">
-        <img src="../../assets/images/headPhoto2.png" />
+        <img :src="imgSrc" />
         <router-link :to="{ name: 'blogMine' }">
           <span>个人中心</span>
         </router-link>
@@ -13,7 +13,9 @@
           tag="div"
           :class="{ activeOption: $route.meta.active === '/blogWrite/works' }"
         >
-          <div class="option"><i class="zyjFamily">&#xe615;</i>我的文章</div>
+          <div class="option">
+            <i class="zyjFamily">&#xe615;</i>我的文章
+          </div>
         </router-link>
         <router-link
           to="/blogWrite/collectedWorks"
@@ -22,10 +24,16 @@
             activeOption: $route.meta.active === '/blogWrite/collectedWorks'
           }"
         >
-          <div class="option"><i class="zyjFamily">&#xe610;</i>我的文集</div>
+          <div class="option">
+            <i class="zyjFamily">&#xe610;</i>我的文集
+          </div>
         </router-link>
-        <div class="option"><i class="zyjFamily">&#xe616;</i>我的草稿</div>
-        <div class="option"><i class="zyjFamily">&#xe614;</i>垃圾箱</div>
+        <div class="option">
+          <i class="zyjFamily">&#xe616;</i>我的草稿
+        </div>
+        <div class="option">
+          <i class="zyjFamily">&#xe614;</i>垃圾箱
+        </div>
       </div>
       <router-link :to="{ name: 'blogHome' }">
         <button>返回首页</button>
@@ -38,7 +46,9 @@
 export default {
   name: "writeLeft",
   data() {
-    return {};
+    return {
+      imgSrc: require("@/assets/images/headPhoto.png")
+    };
   },
   methods: {}
 };

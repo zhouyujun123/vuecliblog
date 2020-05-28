@@ -20,7 +20,7 @@
                 <span>笔者：</span>
                 <span class="con">{{ item.author }}</span>
                 <span>发布于：</span>
-                <span class="con">{{ item.upTime }}</span>
+                <span class="con">{{ item.upTime | dateFormat() }}</span>
               </p>
             </div>
             <div class="article_right fr">
@@ -29,18 +29,15 @@
           </div>
           <!-- </router-link> -->
           <div class="loadMore">
-            <button @click="moreArticle()">加载更多文章</button>
+            <button @click="moreArticle()" v-if="show">加载更多文章</button>
+            <p class="noArtical" v-else>已经到底咯~~~</p>
           </div>
           <div class="bottom_img">
-            <img src="@/assets/images/bookcase.png" />
+            <img src="@/assets/images/footer.png" />
           </div>
         </div>
         <div class="index-right fr">
           <div class="notice">
-            <!-- <div class="top">
-              <span>系统公告</span>
-              <i class="zyjFamily">&#xe6ef;</i>
-            </div>-->
             <div class="con">
               <p class="top">系统公告</p>
               <p>如果需要使用发布文章等功能，需要先登录哦~</p>
@@ -59,18 +56,18 @@
                 <img src="../assets/images/headPhoto.png" />
               </div>
               <div class="author_m fl">
-                <p>作者的昵称啦啦啦</p>
+                <p>123</p>
                 <p>
                   有
-                  <span>2.3k</span>人已关注哦
+                  <span>123</span>人已关注哦
                 </p>
               </div>
               <div class="author_r fl">
-                <button>+&nbsp;关注</button>
+                <button>+ 关注</button>
               </div>
             </div>
             <div class="bottom">
-              <router-link to="/blogSearch/searchUsers">
+              <router-link to="/blogSearch">
                 <button>
                   更多优秀作者
                   <i class="layui-icon layui-icon-next"></i>
@@ -90,22 +87,19 @@
 <script>
 import blogHead from "@/components/blogHead.vue";
 import blogFoot from "@/components/blogFoot.vue";
+import { get } from "@/axios/axios.js";
 
 export default {
   name: "blogHome",
   data() {
     return {
-      articleList: [
-        // {
-        //   articleName: "我的",
-        //   articleCon: "22222",
-        //   author: "333333",
-        //   upTime: "444444"
-        // }
-      ],
+      articleList: [],
+      // authorList: [],
       // 模拟页码
       currentPage: 1,
-      search: ""
+      search: "",
+      total: 0,
+      show: true
     };
   },
   components: {
@@ -113,58 +107,76 @@ export default {
     blogFoot
   },
   methods: {
-    // 搜索文章
-    searchWorks() {
-      // return this.workLine.filter(item => {
-      //   if (item.newWork.includes(keywords)) {
-      //     return item;
-      //   }
-      // });
-    },
     handleClick(id) {
-      console.log(id);
+      console.log("momo" + id);
       this.$router.push({
         // name: "newWork",
         path: "/blogArticle" + "/" + id,
         params: {
-          colId: "000000000000",
+          colId: "0",
           articleId: id
         }
       });
     },
     moreArticle() {
-      // this.showTable();
-      this.currentPage++;
-      console.log(this.currentPage);
+      if (this.total <= 6) {
+        this.show = !this.show;
+      } else if (this.currentPage < (this.total % 6) + 1) {
+        this.currentPage++;
+        console.log(this.currentPage);
+        this.showTable();
+      } else {
+        this.show = !this.show;
+      }
     },
     showTable() {
-      console.log(1);
-      this.$axios
-        .get("http://localhost:8092/tArticle/findAllArticle", {
-          params: {
-            // articleCorpusId: this.$route.params.id,
-            page: this.currentPage,
-            size: 6
-          }
-        })
+      console.log("显示表格");
+      let data = {
+        // articleCorpusId: this.$route.params.id,
+        articleState: 1,
+        page: this.currentPage,
+        size: 6
+      };
+      get("/tArticle/findAllArticle", data)
         .then(resp => {
           console.log(resp);
-          // this.total = resp.data.data.total;
-          // this.corpusLength = this.total;
+          this.total = resp.data.data.total;
+          console.log(this.total % 6);
           for (let i = 0; i < resp.data.data.list.length; i++) {
-            this.articleList.unshift({
-              articleId: resp.data.data.list[i].articleId,
+            this.articleList.push({
+              articleId: resp.data.data.list[i].id,
               author: resp.data.data.list[i].articleAuthor,
               articleName: resp.data.data.list[i].articleName,
-              upTime: resp.data.data.list[i].articleTime,
-              articleCon: resp.data.data.list[i].articleContent
+              upTime: resp.data.data.list[i].articleCreateTime,
+              articleCon: resp.data.data.list[i].articleIntroduct
             });
           }
-          console.log(this.articleList);
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    showAuthor() {
+      console.log("显示作者");
+      // let data = {};
+      // get("/tArticle/findAllArticle", data)
+      //   .then(resp => {
+      //     console.log(resp);
+      //     this.total = resp.data.data.total;
+      //     console.log(this.total % 6);
+      //     for (let i = 0; i < resp.data.data.list.length; i++) {
+      //       this.articleList.push({
+      //         articleId: resp.data.data.list[i].articleId,
+      //         author: resp.data.data.list[i].articleAuthor,
+      //         articleName: resp.data.data.list[i].articleName,
+      //         upTime: resp.data.data.list[i].articleCreateTime,
+      //         articleCon: resp.data.data.list[i].articleIntroduct
+      //       });
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     }
   },
   created() {
@@ -255,6 +267,12 @@ export default {
   background-color: #a5a5a5;
   padding: 10px 15px;
   color: #fff;
+}
+.indexBody .index_left .loadMore .noArtical {
+  width: 100%;
+  text-align: center;
+  color: #ccc;
+  font-size: 12px;
 }
 /* .indexBody .index_left .bottom_img{
 

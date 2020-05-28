@@ -4,25 +4,26 @@
     <dl>
       <dt>原密码：</dt>
       <dd>
-        <el-input v-model="passWord" placeholder="请输入内容"></el-input>
+        <el-input v-model="passWord" placeholder="请输入内容" type="password"></el-input>
       </dd>
     </dl>
     <dl>
       <dt>新密码：</dt>
       <dd>
-        <el-input v-model="passWordNow" placeholder="请输入内容"></el-input>
+        <el-input v-model="passWordNow" placeholder="请输入内容" type="password"></el-input>
       </dd>
     </dl>
     <dl>
       <dt>再次输入新密码：</dt>
       <dd>
-        <el-input v-model="morePassWordNow" placeholder="请输入内容"></el-input>
+        <el-input v-model="morePassWordNow" placeholder="请输入内容" type="password"></el-input>
       </dd>
     </dl>
-    <button class="saveMassage">提交</button>
+    <button class="saveMassage" @click="pushNewPSW()">提交</button>
   </div>
 </template>
 <script>
+// import { post } from "@/axios/axios.js";
 export default {
   name: "mineSetting",
   data() {
@@ -31,6 +32,29 @@ export default {
       passWordNow: "",
       morePassWordNow: ""
     };
+  },
+  methods: {
+    pushNewPSW() {
+      if (this.passWord == "") {
+        alert("请输入原来的密码！");
+      } else if (this.passWordNow == "") {
+        alert("请输入新密码！");
+      } else if (this.passWordNow !== this.morePassWordNow) {
+        alert("两次输入的新密码不匹配！");
+      } else if (this.passWordNow == this.morePassWordNow) {
+        alert("1");
+        // let data = {
+        //   userPsw: this.passWordNow
+        // };
+        // post("/updateUserInfo", data)
+        //   .then(resp => {
+        //     console.log(resp);
+        //   })
+        //   .catch(err => {
+        //     console.log(err);
+        //   });
+      }
+    }
   }
 };
 </script>

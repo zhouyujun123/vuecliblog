@@ -1,48 +1,40 @@
 <template>
   <div>
     <div style="border-bottom: 1px solid #eee; min-width:1400px;">
-      <blog-Head></blog-Head>
+      <blog-Head :pullSearchKey="pullSearchKey"></blog-Head>
     </div>
     <div class="searchPage">
       <div class="counter">
         <div class="searchClass">
           <div class="border_r">
-            <router-link
-              to="/blogSearch/searchUsers"
-              tag="div"
-              :class="{ 'activeSearch': $route.meta.active === '/blogSearch/searchUsers' }"
+            <div
+              :class="['btn', { activeSearch: changeActive == 1 }]"
+              @click.prevent="comName = 'searchUsers'"
+              @click="activeSearch(1)"
             >
-              <div class="btn">
-                <i class="zyjFamily">&#xe6ef;</i>
-                <span>用户</span>
-              </div>
-            </router-link>
-            <router-link
-              to="/blogSearch/searchWorks"
-              tag="div"
-              :class="{ 'activeSearch': $route.meta.active === '/blogSearch/searchWorks' }"
+              <i class="zyjFamily">&#xe6ef;</i>
+              <span>用户</span>
+            </div>
+            <div
+              :class="['btn', { activeSearch: changeActive == 2 }]"
+              @click.prevent="comName = 'searchWorks'"
+              @click="activeSearch(2)"
             >
-              <div class="btn">
-                <i class="zyjFamily">&#xe615;</i>
-                <span>文章</span>
-              </div>
-            </router-link>
-            <router-link
-              to="/blogSearch/searchCorpus"
-              tag="div"
-              :class="{ 'activeSearch': $route.meta.active === '/blogSearch/searchCorpus' }"
+              <i class="zyjFamily">&#xe615;</i>
+              <span>文章</span>
+            </div>
+            <div
+              :class="['btn', { activeSearch: changeActive == 3 }]"
+              @click.prevent="comName = 'searchCorpus'"
+              @click="activeSearch(3)"
             >
-              <div class="btn">
-                <i class="zyjFamily">&#xe610;</i>
-                <span>文集</span>
-              </div>
-            </router-link>
+              <i class="zyjFamily">&#xe610;</i>
+              <span>文集</span>
+            </div>
           </div>
         </div>
         <div class="searchResults">
-          <transition mode="out-in">
-            <router-view></router-view>
-          </transition>
+          <component :is="comName" :pullSearchKey="pullSearchKey"></component>
         </div>
       </div>
     </div>
@@ -54,11 +46,32 @@
 <script>
 import blogHead from "@/components/blogHead.vue";
 import blogFoot from "@/components/blogFoot.vue";
+import searchUsers from "@/components/blogSearch/searchUsers.vue";
+import searchWorks from "@/components/blogSearch/searchWorks.vue";
+import searchCorpus from "@/components/blogSearch/searchCorpus.vue";
 export default {
   name: "blogSearch",
+  data() {
+    return {
+      comName: "searchUsers",
+      changeActive: 1,
+      pullSearchKey: this.$route.query.searchKey
+    };
+  },
   components: {
     blogHead,
-    blogFoot
+    blogFoot,
+    searchUsers,
+    searchWorks,
+    searchCorpus
+  },
+  methods: {
+    activeSearch(index) {
+      this.changeActive = index;
+    }
+  },
+  mounted() {
+    return this.$route.query.searchKey;
   }
 };
 </script>

@@ -113,7 +113,7 @@ const routes = [
     component: () => import("../views/blogWrite/newWork.vue"),
     meta: {
       active: "/blogWrite/collectedWorks",
-      title: "文集中的文章详情"
+      title: "文章编辑"
     }
   },
   {
@@ -122,37 +122,37 @@ const routes = [
     component: () => import("../views/blogSearch.vue"),
     meta: {
       title: "博客搜索"
-    },
-    redirect: "/blogSearch/searchUsers",
-    children: [
-      {
-        path: "searchUsers",
-        name: "searchUsers",
-        component: () => import("../components/blogSearch/searchUsers.vue"),
-        meta: {
-          active: "/blogSearch/searchUsers",
-          title: "搜索用户"
-        }
-      },
-      {
-        path: "searchWorks",
-        name: "searchWorks",
-        component: () => import("../components/blogSearch/searchWorks.vue"),
-        meta: {
-          active: "/blogSearch/searchWorks",
-          title: "搜索文章"
-        }
-      },
-      {
-        path: "searchCorpus",
-        name: "searchCorpus",
-        component: () => import("../components/blogSearch/searchCorpus.vue"),
-        meta: {
-          active: "/blogSearch/searchCorpus",
-          title: "搜索文集"
-        }
-      }
-    ]
+    }
+    // redirect: "/blogSearch/searchUsers"
+    // children: [
+    //   {
+    //     path: "searchUsers",
+    //     name: "searchUsers",
+    //     component: () => import("../components/blogSearch/searchUsers.vue"),
+    //     meta: {
+    //       active: "/blogSearch/searchUsers",
+    //       title: "搜索用户"
+    //     }
+    //   },
+    //   {
+    //     path: "searchWorks",
+    //     name: "searchWorks",
+    //     component: () => import("../components/blogSearch/searchWorks.vue"),
+    //     meta: {
+    //       active: "/blogSearch/searchWorks",
+    //       title: "搜索文章"
+    //     }
+    //   },
+    //   {
+    //     path: "searchCorpus",
+    //     name: "searchCorpus",
+    //     component: () => import("../components/blogSearch/searchCorpus.vue"),
+    //     meta: {
+    //       active: "/blogSearch/searchCorpus",
+    //       title: "搜索文集"
+    //     }
+    //   }
+    // ]
   },
   {
     path: "/blogMine",
@@ -275,7 +275,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  // mode: "history",
+  mode: "history",
+  // mode: "hash",
   base: process.env.BASE_URL,
   routes
 });
@@ -297,8 +298,16 @@ router.beforeEach((to, from, next) => {
   //to 要去的路由配置
   //from 当前的路由配置
   //next 一定要调用，让to的路由配置继续生效，比如如果去登陆直接next(),否则判断token是否存在，如果存在就next()
-
+  // if (to.path === "/") return next();
   if (to.path === "/loginRegister") return next(); //使用return，不需要写else
+  // if (to.path === "/reset") return next();
+  // if (to.path === "/resetEmail") return next();
+  // if (to.path === "/blogArticle/:articleId") return next();
+  // if (to.path === "/blogCorpus") return next();
+  // if (to.path === "/blogSearch/searchUsers") return next();
+  // if (to.path === "/blogSearch/searchWorks") return next();
+  // if (to.path === "/blogSearch/searchCorpus") return next();
+  // if (to.path === "/blogPeople") return next();
 
   //判断其他页面是否有token
   const token = localStorage.getItem("Authorization");

@@ -1,27 +1,62 @@
 <template>
   <div class="mineArtical">
-    <div class="article">
+    <div class="article" v-for="(item, index) in mineArticalList" :key="index">
       <div class="top">
-        <span>time</span>
+        <span>{{ item.articalTime }}</span>
       </div>
-      <p class="articleName">jkjkjk</p>
-      <p class="articleCon">ghjgjh</p>
+      <p class="articleName">{{ item.articleName }}</p>
+      <p class="articleCon">{{ item.articleCon }}</p>
       <div class="foot">
         <div class="cell">
           <i class="zyjFamily">&#xe60c;</i>
-          <span>456</span>
+          <span>{{ item.giveLike }}</span>
         </div>
         <div class="cell">
           <i class="zyjFamily">&#xe60a;</i>
-          <span>dhf</span>
+          <span>{{ item.comments }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { get } from "@/axios/axios.js";
 export default {
-  name: "mineArtical"
+  name: "mineArtical",
+  data() {
+    return {
+      mineArticalList: []
+    };
+  },
+  created() {
+    this.showMineArtical();
+  },
+  methods: {
+    showMineArtical() {
+      let data = {
+        userId: this.$store.state.UserId,
+        articleState: 1,
+        page: 1,
+        size: 6
+      };
+      get("/tArticle/findAllArticle", data)
+        .then(resp => {
+          console.log(resp);
+          this.total = resp.data.data.total;
+          console.log(this.total % 6);
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.mineArticalList.push({
+              articleName: resp.data.data.list[i].articleName,
+              articalTime: resp.data.data.list[i].articleCreateTime,
+              articleCon: resp.data.data.list[i].articleIntroduct
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }
 };
 </script>
 

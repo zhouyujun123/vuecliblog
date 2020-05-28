@@ -9,12 +9,12 @@
         <div class="right">
           <span>退出登录</span>
         </div>
-      </div> -->
+      </div>-->
       <div class="people-area">
         <div class="area-top">
           <div class="flex">
             <div class="people-img">
-              <img src="@/assets/images/headPhoto.png" />
+              <img :src="imgSrc" />
             </div>
             <div class="area-detail">
               <p class="name">一只兔子</p>
@@ -37,7 +37,9 @@
 export default {
   name: "mineHead",
   data() {
-    return {};
+    return {
+      imgSrc: require("@/assets/images/headPhoto.png")
+    };
   },
   created() {
     // $webfont.load("body", "ea64072ce3f14c799f6ba9a173144f10", "DroidSans");
