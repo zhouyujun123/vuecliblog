@@ -14,8 +14,8 @@
       </ul>
       <div class="search fl">
         <div class="search_bgc">
-          <input type="text" placeholder="搜索" v-model="searchAll" @keyup.enter="jump()" />
-          <button @click.enter="jump()">
+          <input type="text" placeholder="搜索" v-model="searchAll" @keyup.enter="searchJump" />
+          <button @click.enter="searchJump">
             <i class="zyjFamily">&#xe65b;</i>
           </button>
         </div>
@@ -55,26 +55,30 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
+  inject: ["reload"],
   name: "blogHead",
   data() {
     return {
       searchAll: "",
       showMe: false,
-      imgSrc: require("@/assets/images/headPhoto.png")
+      imgSrc: ""
     };
   },
   props: {
     pullSearchKey: String
   },
   methods: {
-    jump() {
+    searchJump() {
+      console.log(223);
       this.$router.push({
         name: "blogSearch",
         query: {
           searchKey: this.searchAll
         }
       });
+      this.reload();
     },
     show() {
       if (this.$store.state.Authorization == "") {
@@ -89,12 +93,25 @@ export default {
       this.$router.push("/loginRegister");
     },
     // 读取图片
-    readHeadImg() {}
+    readHeadImg() {
+      let userId = this.$store.state.UserId;
+      let data = {
+        id: userId
+      };
+      get("/getUserInfo/" + userId, data)
+        .then(resp => {
+          console.log(resp);
+          this.imgSrc = resp.data.data.headImg;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   },
   created() {
+    this.readHeadImg();
     this.show();
     this.searchAll = this.pullSearchKey;
-    console.log(this.pullSearchKey);
   }
 };
 </script>

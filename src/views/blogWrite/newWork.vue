@@ -148,25 +148,7 @@ export default {
       });
     },
     $imgDel(pos) {
-      console.log(123);
-      // delete this.img_file[pos];
-      var formdata = new FormData();
-      formdata.append("imgId", this.img_file[pos]);
-      axios({
-        url: "http://localhost:8092/tImg/deleteImg",
-        method: "post",
-        data: formdata,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          token: localStorage.getItem("Authorization")
-        }
-      })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      console.log(pos);
     },
     // 添加至列表
     submit() {

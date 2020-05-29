@@ -1,9 +1,9 @@
 <template>
   <div class="searchUsers">
-    <div class="user" v-for="(item, index) in userList" :key="index">
+    <router-link :to="{ name: 'blogPeople' }" class="user" v-for="(item, index) in userList" :key="index">
       <div class="left">
         <div class="img">
-          <img src="@/assets/images/headPhoto.png" />
+          <img :src="item.imgSrc" />
         </div>
         <div class="userDetail">
           <p class="name">{{ item.userName }}</p>
@@ -28,27 +28,46 @@
         <!-- <button class="get">已关注</button> -->
         <button class="willGet">+关注</button>
       </div>
-    </div>
+    </router-link>
     <button class="more">更多搜索结果...</button>
   </div>
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
   name: "searchUsers",
   data() {
     return {
-      userList: [
-        {
-          userName: "zyj", // 用户名
-          userIntrduct: "123456789789456123", // 用户介绍
-          userFans: "233", // 粉丝
-          userArtical: "456", // 文章
-          userCorpus: "123", // 文集
-          userGet: "get" // 是否关注
-        }
-      ]
+      userList: []
     };
+  },
+  props: {
+    pullSearchKey: String
+  },
+  created() {
+    console.log(this.pullSearchKey);
+    let data = {
+      page: 1,
+      size: 10,
+      type: 0,
+      text: this.pullSearchKey
+    };
+    get("/findLike", data)
+      .then(resp => {
+        console.log(resp);
+        for (let i = 0; i < resp.data.data.list.length; i++) {
+          this.userList.unshift({
+            id: resp.data.data.list[i].id,
+            userName: resp.data.data.list[i].userName,
+            userIntrduct: resp.data.data.list[i].introduction,
+            imgSrc: resp.data.data.list[i].headImg
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>

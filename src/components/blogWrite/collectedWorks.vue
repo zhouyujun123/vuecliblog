@@ -20,6 +20,7 @@
             <td>文集名称</td>
             <td>更新时间</td>
             <td>状态</td>
+            <td>操作</td>
             <td></td>
           </tr>
           <tr
@@ -35,7 +36,11 @@
               </div>
             </td>
             <td>{{ item.workTime | dateFormatMore() }}</td>
-            <td>{{ item.workState }}</td>
+            <td :class="[item.workState ? 'activeColor' : '']">{{ item.workState ? "已发布" : "未发布" }}</td>
+            <td>
+              <button class="fabu" @click.stop="pushCorpus(item.id)">发布</button>
+              <button class="xiugai" @click.stop="changeCorpus(item.id, item.newWork)">修改</button>
+            </td>
             <td>
               <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.id)">&#xe614;</i>
             </td>
@@ -51,6 +56,17 @@
         layout="prev, pager, next"
         :total="total"
       ></el-pagination>
+      <el-dialog title="发布文集" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
+        <el-form>
+          <el-form-item label="文集名称">
+            <el-input v-model="formName"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="pushOK()">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -58,6 +74,7 @@
 <script>
 import { get, post } from "@/axios/axios.js";
 let myData = new Date();
+let couId = 0;
 export default {
   inject: ["reload"],
   name: "collectedWorks",
@@ -74,7 +91,9 @@ export default {
       // 分页
       total: 0,
       pageSize: 6,
-      currentPage: 1
+      currentPage: 1,
+      dialogFormVisible: false,
+      formName: ""
     };
   },
   created: function() {
@@ -98,8 +117,8 @@ export default {
         let data = {
           userId: this.$store.state.UserId,
           corpusName: this.newWork,
-          corpusCreateTime: this.$options.methods.formatDateTime(myData)
-          // corpusNum: 0
+          corpusCreateTime: this.$options.methods.formatDateTime(myData),
+          status: 0
         };
         post("/tCorpus/addCorpus", data)
           .then(resp => {
@@ -136,6 +155,49 @@ export default {
       } else {
         return false;
       }
+    },
+    // 发布文集
+    pushCorpus(id) {
+      let data = {
+        id: id,
+        status: 1
+      };
+      post("/tCorpus/updateCorpus", data)
+        .then(resp => {
+          if (resp.data.resultCode == 2000) {
+            alert("文集发布成功！");
+            this.reload();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 修改文集标题
+    changeCorpus(id, newWork) {
+      this.dialogFormVisible = true;
+      console.log(id, newWork);
+      this.formName = newWork;
+      couId = id;
+      console.log(couId);
+    },
+    pushOK() {
+      console.log(couId);
+      let data = {
+        id: couId,
+        corpusName: this.formName
+      };
+      post("/tCorpus/updateCorpus", data)
+        .then(resp => {
+          console.log(resp);
+          if (resp.data.resultCode == 2000) {
+            this.dialogFormVisible = false;
+            this.reload();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 页面传值
     handleClick(id, newWork) {
@@ -197,7 +259,7 @@ export default {
           for (let i = 0; i < resp.data.data.list.length; i++) {
             this.workLine.unshift({
               id: resp.data.data.list[i].id,
-              // corpusId: resp.data.data.list[i].corpusId,
+              workState: resp.data.data.list[i].status,
               newWork: resp.data.data.list[i].corpusName,
               workTime: resp.data.data.list[i].corpusCreateTime
               // workNum: resp.data.data.list[i].corpusNum
@@ -332,6 +394,29 @@ export default {
             color: #fff;
             cursor: pointer;
           }
+
+          .fabu {
+            padding: 5px 10px;
+            background-color: #f0fcfa;
+            border-radius: 5px;
+            color: #07c160;
+            font-size: 14px;
+            cursor: pointer;
+          }
+
+          .xiugai {
+            padding: 5px 10px;
+            background-color: #f0fcfa;
+            border-radius: 5px;
+            color: #07c160;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+          }
+        }
+
+        .activeColor {
+          color: #ea6f5a;
         }
 
         &:hover {

@@ -11,15 +11,22 @@
       <dt>性别：</dt>
       <dd>
         <el-radio-group v-model="form.resource">
-          <el-radio label="男"></el-radio>
-          <el-radio label="女"></el-radio>
+          <el-radio :label="1">男</el-radio>
+          <el-radio :label="2">女</el-radio>
         </el-radio-group>
       </dd>
     </dl>
     <dl>
       <dt>出生年份：</dt>
       <dd>
-        <el-date-picker v-model="years" type="year" placeholder="选择年份"></el-date-picker>
+        <el-date-picker
+          v-model="years"
+          type="year"
+          placeholder="选择年份"
+          :editable="false"
+          @change="getSTime"
+          value-format="yyyy"
+        ></el-date-picker>
       </dd>
     </dl>
     <dl>
@@ -37,34 +44,81 @@
         </div>
       </dd>
     </dl>
-    <button class="saveMassage">保存修改</button>
+    <button class="saveMassage" @click="saveMassage()">保存修改</button>
   </div>
   <!-- "../../../assets/images/headPhoto.png" -->
 </template>
 <script>
 import axios from "axios";
-import $ from "jquery";
+import { get, post } from "@/axios/axios.js";
 export default {
+  inject: ["reload"],
   name: "mineMassage",
   data() {
     return {
       years: "",
-      imgSrc: require("@/assets/images/headPhoto.png"),
+      imgSrc: "",
       errorStr: "",
       inputName: "",
       inputIntrduct: "",
       form: {
-        resource: ""
+        resource: 1
       }
     };
   },
-  created: function() {
-    console.log($);
+  created() {
+    this.showMineMassage();
   },
   methods: {
+    getSTime(val) {
+      this.years = val;
+    },
+    showMineMassage() {
+      let userId = this.$store.state.UserId;
+      let data = {
+        id: userId
+      };
+      get("/getUserInfo/" + userId, data)
+        .then(resp => {
+          console.log(resp);
+          this.inputName = resp.data.data.nickName;
+          this.form.resource = resp.data.data.sex;
+          this.imgSrc = resp.data.data.headImg;
+          this.years = resp.data.data.birthDate;
+          this.inputIntrduct = resp.data.data.introduction;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 保存修改
+    saveMassage() {
+      let data = {
+        id: this.$store.state.UserId,
+        sex: this.form.resource,
+        nickName: this.inputName,
+        birthDate: this.years,
+        introduction: this.inputIntrduct,
+        headImg: this.imgSrc
+      };
+      post("/updateUserInfo", data)
+        .then(resp => {
+          console.log(this.years);
+          console.log(this.imgSrc);
+          console.log(resp);
+          if (resp.data.resultCode == 2000) {
+            alert("保存成功！");
+            this.reload();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     //头像选择
     onchangeImgFun(e) {
       var file = e.target.files[0];
+      console.log(file);
       var formFile = new FormData(); // FormData 对象
       formFile.append("files", file); // 文件对象
       // 获取图片的大小，做大小限制有用
@@ -85,7 +139,7 @@ export default {
             token: localStorage.getItem("Authorization")
           }
         }).then(url => {
-          console.log(url.data.data[0]);
+          console.log(url);
           this.imgSrc = url.data.data[0];
         });
       } else {

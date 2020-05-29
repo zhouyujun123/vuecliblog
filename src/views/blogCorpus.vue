@@ -94,18 +94,6 @@
       <div class="guding">
         <div class="circle-click">
           <button>
-            <i class="zyjFamily">&#xe60c;</i>
-          </button>
-          <p>点赞</p>
-        </div>
-        <div class="circle-click">
-          <button>
-            <i class="zyjFamily">&#xe612;</i>
-          </button>
-          <p>喜欢</p>
-        </div>
-        <div class="circle-click">
-          <button>
             <i class="zyjFamily">&#xe745;</i>
           </button>
           <p>置顶</p>

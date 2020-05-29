@@ -2,7 +2,7 @@
   <div class="newWorkLeft">
     <div class="whoWrite">
       <router-link :to="{ name: 'blogMine' }">
-        <img src="../../assets/images/headPhoto2.png" />
+        <img :src="imgSrc" />
       </router-link>
     </div>
     <router-link :to="{ name: 'blogHome' }">
@@ -14,12 +14,34 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
   name: "newWorkLeft",
   data() {
-    return {};
+    return {
+      imgSrc: ""
+    };
   },
-  methods: {}
+  methods: {
+    // 读取图片
+    readHeadImg() {
+      let userId = this.$store.state.UserId;
+      let data = {
+        id: userId
+      };
+      get("/getUserInfo/" + userId, data)
+        .then(resp => {
+          console.log(resp);
+          this.imgSrc = resp.data.data.headImg;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
+  created() {
+    this.readHeadImg();
+  }
 };
 </script>
 
@@ -45,6 +67,7 @@ export default {
     img {
       width: 40px;
       height: 40px;
+      border-radius: 50%;
     }
 
     span {

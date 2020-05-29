@@ -17,8 +17,8 @@
               <img :src="imgSrc" />
             </div>
             <div class="area-detail">
-              <p class="name">一只兔子</p>
-              <p class="detail">是一只在加拿大留过学的兔子</p>
+              <p class="name">{{ userName }}</p>
+              <p class="detail">{{ inputIntrduct }}</p>
               <p class="time">2020-03-04 00:00:00注册</p>
             </div>
           </div>
@@ -34,16 +34,31 @@
   </div>
 </template>
 <script>
+import { get } from "@/axios/axios.js";
 export default {
   name: "mineHead",
   data() {
     return {
-      imgSrc: require("@/assets/images/headPhoto.png")
+      userName: "",
+      inputIntrduct: "",
+      imgSrc: ""
     };
   },
   created() {
-    // $webfont.load("body", "ea64072ce3f14c799f6ba9a173144f10", "DroidSans");
-    // $webfont.draw();
+    let userId = this.$store.state.UserId;
+    let data = {
+      id: userId
+    };
+    get("/getUserInfo/" + userId, data)
+      .then(resp => {
+        console.log(resp);
+        this.userName = resp.data.data.nickName;
+        this.imgSrc = resp.data.data.headImg;
+        this.inputIntrduct = resp.data.data.introduction;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
@@ -75,6 +90,7 @@ export default {
 
           img {
             width: 100%;
+            border-radius: 50%;
           }
         }
 

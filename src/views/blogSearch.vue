@@ -50,6 +50,7 @@ import searchUsers from "@/components/blogSearch/searchUsers.vue";
 import searchWorks from "@/components/blogSearch/searchWorks.vue";
 import searchCorpus from "@/components/blogSearch/searchCorpus.vue";
 export default {
+  inject: ["reload"],
   name: "blogSearch",
   data() {
     return {
@@ -69,9 +70,6 @@ export default {
     activeSearch(index) {
       this.changeActive = index;
     }
-  },
-  mounted() {
-    return this.$route.query.searchKey;
   }
 };
 </script>

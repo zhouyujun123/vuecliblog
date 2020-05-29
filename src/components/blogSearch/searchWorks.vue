@@ -1,8 +1,13 @@
 <template>
   <div class="searchWorks">
-    <div class="article" v-for="(item, index) in articleList" :key="index">
+    <div
+      class="article"
+      v-for="(item, index) in articleList"
+      :key="index"
+      @click="handleClick(item.id)"
+    >
       <div class="top">
-        <img src="@/assets/images/headPhoto.png" />
+        <!-- <img :src="item.imgSrc" /> -->
         <span>{{ item.aothor }}</span>
         <span>{{ item.articleTime }}</span>
       </div>
@@ -24,21 +29,54 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
   name: "searchWorks",
   data() {
     return {
-      articleList: [
-        {
-          aothor: "zyj", // 用户名
-          articleTime: "2019-01-10 00:00:00", // 发布时间
-          articleName: "abcdefg", // 粉丝
-          articleCon: "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", // 文章
-          good: "123", // 文集
-          comment: "123123" // 是否关注
-        }
-      ]
+      articleList: []
     };
+  },
+  props: {
+    pullSearchKey: String
+  },
+  created() {
+    console.log(this.pullSearchKey);
+    let data = {
+      page: 1,
+      size: 10,
+      type: 1,
+      text: this.pullSearchKey
+    };
+    get("/findLike", data)
+      .then(resp => {
+        console.log(resp);
+        for (let i = 0; i < resp.data.data.list.length; i++) {
+          this.articleList.unshift({
+            id: resp.data.data.list[i].id,
+            userId: resp.data.data.list[i].userId,
+            articleName: resp.data.data.list[i].articleName,
+            articleCon: resp.data.data.list[i].articleIntroduct,
+            articleTime: resp.data.data.list[i].articleCreateTime
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  methods: {
+    handleClick(id) {
+      console.log("momo" + id);
+      this.$router.push({
+        // name: "newWork",
+        path: "/blogArticle" + "/" + id,
+        params: {
+          colId: "0",
+          articleId: id
+        }
+      });
+    }
   }
 };
 </script>

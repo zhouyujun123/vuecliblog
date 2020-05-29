@@ -1,10 +1,6 @@
 <template>
   <div class="searchCorpus">
-    <router-link
-      :to="{ name: 'blogCorpus' }"
-      v-for="(item, index) in corpusList"
-      :key="index"
-    >
+    <router-link :to="{ name: 'blogCorpus' }" v-for="(item, index) in corpusList" :key="index">
       <div class="corpus">
         <div class="left">
           <img src="@/assets/images/book.png" />
@@ -28,29 +24,38 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
   name: "searchCorpus",
   data() {
     return {
-      corpusList: [
-        {
-          corpusName: "vue实战课程", // 用户名
-          corpusFans: "456" // 发布时间
-        },
-        {
-          corpusName: "vue实战课程", // 用户名
-          corpusFans: "456" // 发布时间
-        },
-        {
-          corpusName: "vue实战课程", // 用户名
-          corpusFans: "456" // 发布时间
-        },
-        {
-          corpusName: "vue实战课程", // 用户名
-          corpusFans: "456" // 发布时间
-        }
-      ]
+      corpusList: []
     };
+  },
+  props: {
+    pullSearchKey: String
+  },
+  created() {
+    console.log(this.pullSearchKey);
+    let data = {
+      page: 1,
+      size: 10,
+      type: 2,
+      text: this.pullSearchKey
+    };
+    get("/findLike", data)
+      .then(resp => {
+        console.log(resp);
+        for (let i = 0; i < resp.data.data.list.length; i++) {
+          this.corpusList.unshift({
+            id: resp.data.data.list[i].id,
+            corpusName: resp.data.data.list[i].corpusName
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
