@@ -25,20 +25,28 @@
       </div>
     </div>
     <button class="more">更多搜索结果...</button>
+    <transition name="fade">
+      <loading v-if="isLoading"></loading>
+    </transition>
   </div>
 </template>
 
 <script>
+import Loading from "@/components/loading/index.vue";
 import { get } from "@/axios/axios.js";
 export default {
   name: "searchWorks",
   data() {
     return {
-      articleList: []
+      articleList: [],
+      isLoading: true
     };
   },
   props: {
     pullSearchKey: String
+  },
+  components: {
+    Loading
   },
   created() {
     console.log(this.pullSearchKey);
@@ -60,6 +68,7 @@ export default {
             articleTime: resp.data.data.list[i].articleCreateTime
           });
         }
+        this.isLoading = false;
       })
       .catch(err => {
         console.log(err);

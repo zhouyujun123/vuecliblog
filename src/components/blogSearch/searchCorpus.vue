@@ -22,20 +22,28 @@
       </div>
     </div>
     <button class="more">更多搜索结果...</button>
+    <transition name="fade">
+      <loading v-if="isLoading"></loading>
+    </transition>
   </div>
 </template>
 
 <script>
+import Loading from "@/components/loading/index.vue";
 import { get } from "@/axios/axios.js";
 export default {
   name: "searchCorpus",
   data() {
     return {
-      corpusList: []
+      corpusList: [],
+      isLoading: true
     };
   },
   props: {
     pullSearchKey: String
+  },
+  components: {
+    Loading
   },
   created() {
     console.log(this.pullSearchKey);
@@ -54,6 +62,7 @@ export default {
             corpusName: resp.data.data.list[i].corpusName
           });
         }
+        this.isLoading = false;
       })
       .catch(err => {
         console.log(err);

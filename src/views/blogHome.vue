@@ -6,7 +6,6 @@
     <div class="indexBody">
       <div class="counter">
         <div class="index_left fl">
-          <!-- <router-link to="blogArticle"> -->
           <div
             class="the_article"
             v-for="(item, index) in articleList"
@@ -27,8 +26,10 @@
               <img src="../assets/images/jiazhuang.jpg" />
             </div>
           </div>
-          <!-- </router-link> -->
           <div class="loadMore">
+            <transition name="fade">
+              <loading-buttom v-if="isbuttom"></loading-buttom>
+            </transition>
             <button @click="moreArticle()" v-if="show">加载更多文章</button>
             <p class="noArtical" v-else>已经到底咯~~~</p>
           </div>
@@ -55,6 +56,7 @@
               class="middle"
               v-for="(item, index) in authorList"
               :key="index"
+              @click="handlePeople(item.userId)"
             >
               <div class="author_l fl">
                 <img :src="item.imgSrc" />
@@ -85,10 +87,15 @@
     <div style="border-top: 1px solid #eee; min-width:1400px;">
       <blog-foot></blog-foot>
     </div>
+    <transition name="fade">
+      <loading v-if="isLoading"></loading>
+    </transition>
   </div>
 </template>
 
 <script>
+import LoadingButtom from "@/components/loading/indexButtom.vue";
+import Loading from "@/components/loading/index.vue";
 import blogHead from "@/components/blogHead.vue";
 import blogFoot from "@/components/blogFoot.vue";
 import { get } from "@/axios/axios.js";
@@ -103,12 +110,16 @@ export default {
       currentPage: 1,
       search: "",
       total: 0,
-      show: true
+      show: true,
+      isLoading: true,
+      isbuttom: false
     };
   },
   components: {
     blogHead,
-    blogFoot
+    blogFoot,
+    Loading,
+    LoadingButtom
   },
   methods: {
     handleClick(id) {
@@ -121,13 +132,29 @@ export default {
         }
       });
     },
+    handlePeople(id) {
+      if (id == this.$store.state.UserId) {
+        this.$router.push({
+          name: "blogMine"
+        });
+      } else {
+        this.$router.push({
+          path: "/blogPeople" + "/" + id,
+          params: {
+            peopleId: id
+          }
+        });
+      }
+    },
     moreArticle() {
       if (this.total <= 6) {
         this.show = !this.show;
       } else if (this.currentPage < (this.total % 6) + 1) {
         this.currentPage++;
         console.log(this.currentPage);
+        this.isbuttom = true;
         this.showTable();
+        // this.isbuttom = false;
       } else {
         this.show = !this.show;
       }
@@ -154,6 +181,8 @@ export default {
               articleCon: resp.data.data.list[i].articleIntroduct
             });
           }
+          this.isLoading = false;
+          this.isbuttom = false;
         })
         .catch(err => {
           console.log(err);
@@ -172,10 +201,12 @@ export default {
           console.log(resp);
           for (let i = 0; i < resp.data.data.list.length; i++) {
             this.authorList.push({
+              userId: resp.data.data.list[i].role.id,
               author: resp.data.data.list[i].nickName,
               imgSrc: resp.data.data.list[i].headImg
             });
           }
+          this.isLoading = false;
         })
         .catch(err => {
           console.log(err);

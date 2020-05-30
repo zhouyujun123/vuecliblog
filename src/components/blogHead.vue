@@ -121,7 +121,6 @@ export default {
   // min-width: 1400px;
   width: 100%;
   background-color: #fff;
-  box-shadow: 5px 5px 5px #eee;
   position: fixed;
   overflow: visible;
   z-index: 10000;

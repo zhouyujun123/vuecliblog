@@ -130,10 +130,14 @@
       </div>
     </div>
     <blog-foot></blog-foot>
+    <transition name="fade">
+      <loading v-if="isLoading"></loading>
+    </transition>
   </div>
 </template>
 
 <script>
+import Loading from "@/components/loading/index.vue";
 import { get } from "@/axios/axios.js";
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
@@ -146,7 +150,8 @@ export default {
   components: {
     blogHead,
     blogFoot,
-    mavonEditor
+    mavonEditor,
+    Loading
   },
   data() {
     return {
@@ -156,7 +161,9 @@ export default {
       thisArticalName: "",
       thisArticalCreatTime: "",
       thisArticalAuthor: "",
-      imgSrc: "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d"
+      imgSrc:
+        "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d",
+      isLoading: true
     };
   },
   methods: {
@@ -189,6 +196,7 @@ export default {
           .then(resp => {
             console.log(resp);
             this.imgSrc = resp.data.data.headImg;
+            this.isLoading = false;
           })
           .catch(err => {
             console.log(err);
@@ -209,6 +217,7 @@ export default {
                 articleName: resp.data.data.list[i].articleName
               });
             }
+            this.isLoading = false;
           })
           .catch(err => {
             console.log(err);
