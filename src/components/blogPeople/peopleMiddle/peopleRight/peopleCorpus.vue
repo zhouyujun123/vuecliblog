@@ -1,26 +1,56 @@
 <template>
   <div class="peopleCorpus">
-    <div class="corpus">
+    <div class="corpus" v-for="(item, index) in corpusList" :key="index">
       <div class="left">
         <img src="../../../../assets/images/book2.png" />
         <div class="detail">
-          <p>1234598</p>
+          <p>{{ item.corpusName }}</p>
           <p>
-            <span>123456</span>
+            <span>{{ item.payPeople }}</span>
             人关注
           </p>
         </div>
       </div>
       <!-- <div class="right">
         <button class="get">取消关注</button>
-      </div> -->
+      </div>-->
     </div>
   </div>
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
-  name: "peopleCorpus"
+  name: "peopleCorpus",
+  data() {
+    return {
+      corpusList: []
+    };
+  },
+  props: {
+    peopleId: String
+  },
+  created() {
+    console.log(this.peopleId);
+    let data = {
+      page: 1,
+      size: 6,
+      userId: this.peopleId
+    };
+    get("/tCorpus/findAllCorpus", data)
+      .then(resp => {
+        console.log(resp);
+        for (let i = 0; i < resp.data.data.list.length; i++) {
+          this.corpusList.unshift({
+            id: resp.data.data.list[i].id,
+            corpusName: resp.data.data.list[i].corpusName
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 };
 </script>
 

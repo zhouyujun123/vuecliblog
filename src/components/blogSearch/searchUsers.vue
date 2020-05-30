@@ -1,6 +1,6 @@
 <template>
   <div class="searchUsers">
-    <router-link :to="{ name: 'blogPeople' }" class="user" v-for="(item, index) in userList" :key="index">
+    <div @click="handleClick(item.id)" class="user" v-for="(item, index) in userList" :key="index">
       <div class="left">
         <div class="img">
           <img :src="item.imgSrc" />
@@ -28,7 +28,7 @@
         <!-- <button class="get">已关注</button> -->
         <button class="willGet">+关注</button>
       </div>
-    </router-link>
+    </div>
     <button class="more">更多搜索结果...</button>
   </div>
 </template>
@@ -68,6 +68,23 @@ export default {
       .catch(err => {
         console.log(err);
       });
+  },
+  methods: {
+    handleClick(id) {
+      console.log("momo" + id);
+      if (id == this.$store.state.UserId) {
+        this.$router.push({
+          name: "blogMine"
+        });
+      } else {
+        this.$router.push({
+          path: "/blogPeople/" + id,
+          params: {
+            peopleId: id
+          }
+        });
+      }
+    }
   }
 };
 </script>

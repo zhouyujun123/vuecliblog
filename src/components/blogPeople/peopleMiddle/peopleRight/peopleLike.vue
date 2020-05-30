@@ -6,12 +6,9 @@
         :key="index"
         @click="toggle(index, tab.view)"
         :class="{ active: active == index }"
-      >
-        {{ tab.type }}
-      </li>
+      >{{ tab.type }}</li>
     </ul>
-    <!-- :is实现多个组件实现同一个挂载点 -->
-    <component :is="currentView"></component>
+    <component :is="currentView" :peopleId="thePeoplelike"></component>
   </div>
 </template>
 
@@ -24,6 +21,7 @@ export default {
     return {
       active: 0,
       currentView: "peopleLikeArt",
+      thePeoplelike: this.peopleId,
       tabs: [
         {
           type: "文章",
@@ -45,6 +43,12 @@ export default {
   components: {
     peopleLikeArt,
     peopleLikeCor
+  },
+  props: {
+    peopleId: String
+  },
+  created() {
+    console.log(this.peopleId);
   }
 };
 </script>
@@ -54,25 +58,26 @@ export default {
   ul {
     width: 200px;
     display: flex;
-  }
+    padding-top: 10px;
 
-  ul li {
-    width: 80px;
-    height: 30px;
-    background: #fff;
-    display: inline-flex;
-    // border-right: 1px solid #ddd;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 14px;
-  }
+    li {
+      width: 80px;
+      height: 30px;
+      background: #fff;
+      display: inline-flex;
+      // border-right: 1px solid #ddd;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
 
-  ul li.active {
-    background: #f5f5f5;
-    border-radius: 20px;
-    border: 1px solid #eee;
-    color: #ea6f5a;
+      &.active {
+        background: #f5f5f5;
+        border-radius: 20px;
+        border: 1px solid #eee;
+        color: #ea6f5a;
+      }
+    }
   }
 }
 </style>

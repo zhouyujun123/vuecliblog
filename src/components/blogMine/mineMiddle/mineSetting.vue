@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-// import { post } from "@/axios/axios.js";
+import { post } from "@/axios/axios.js";
 export default {
   name: "mineSetting",
   data() {
@@ -35,24 +35,35 @@ export default {
   },
   methods: {
     pushNewPSW() {
+      // let data = {
+      //   id: this.$store.state.UserId
+      // };
+      // get("/getUserInfo" + this.$store.state.UserId, data)
+      //   .then(resp => {
+      //     console.log(resp);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
       if (this.passWord == "") {
-        alert("请输入原来的密码！");
+        alert("原来的密码不匹配！");
       } else if (this.passWordNow == "") {
         alert("请输入新密码！");
       } else if (this.passWordNow !== this.morePassWordNow) {
         alert("两次输入的新密码不匹配！");
       } else if (this.passWordNow == this.morePassWordNow) {
-        alert("1");
-        // let data = {
-        //   userPsw: this.passWordNow
-        // };
-        // post("/updateUserInfo", data)
-        //   .then(resp => {
-        //     console.log(resp);
-        //   })
-        //   .catch(err => {
-        //     console.log(err);
-        //   });
+        alert("修改密码成功！");
+        let data = {
+          userPsw: this.passWordNow,
+          id: this.$store.state.UserId
+        };
+        post("/updateUserInfo", data)
+          .then(resp => {
+            console.log(resp);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     }
   }

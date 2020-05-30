@@ -63,7 +63,7 @@ export default {
     return {
       searchAll: "",
       showMe: false,
-      imgSrc: ""
+      imgSrc: "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d"
     };
   },
   props: {
@@ -71,7 +71,6 @@ export default {
   },
   methods: {
     searchJump() {
-      console.log(223);
       this.$router.push({
         name: "blogSearch",
         query: {

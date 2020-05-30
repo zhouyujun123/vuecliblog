@@ -4,11 +4,11 @@
       <div class="area-top">
         <div class="flex">
           <div class="people-img">
-            <img src="@/assets/images/headPhoto.png" />
+            <img :src="imgSrc" />
           </div>
           <div class="area-detail">
-            <p class="name">一只兔子</p>
-            <p class="detail">是一只在加拿大留过学的兔子</p>
+            <p class="name">{{ nickName }}</p>
+            <p class="detail">{{ introduction }}</p>
             <p class="time">2020-03-04 00:00:00注册</p>
           </div>
         </div>
@@ -23,23 +23,49 @@
   </div>
 </template>
 <script>
+import { get } from "@/axios/axios.js";
 export default {
   name: "peopleHead",
   data() {
-    return {};
+    return {
+      nickName: "",
+      introduction: "",
+      imgSrc: "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d"
+    };
+  },
+  props: {
+    peopleUserId: String
+  },
+  methods: {
+    showUserMassage() {
+      let userId = this.peopleUserId;
+      let data = {
+        id: userId
+      };
+      get("/getUserInfo/" + userId, data)
+        .then(resp => {
+          console.log(resp);
+          this.imgSrc = resp.data.data.headImg;
+          this.nickName = resp.data.data.nickName;
+          this.introduction = resp.data.data.introduction;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   },
   created() {
-    // $webfont.load("body", "ea64072ce3f14c799f6ba9a173144f10", "DroidSans");
-    // $webfont.draw();
+    this.showUserMassage();
+    console.log(this.peopleUserId);
   }
 };
 </script>
 <style scoped lang="stylus">
 .peopleHead {
   padding-top: 56px;
-  background-image: url('../../../public/images/2.png');
-  background-size: 100% 100%;
-  height: 150px;
+  background-image: url('../../../public/images/bgc3.png');
+  // background-size: 100% 100%;
+  height: 200px;
 
   .people-area {
     border-radius: 10px;
@@ -53,24 +79,26 @@ export default {
       // justify-content: space-between;
       .flex {
         position: absolute;
-        top: 30px;
+        top: 50px;
         left: 0;
         display: flex;
         justify-content: start;
-        background-image: url('../../../public/images/fox.png');
-        background-size: 100% 100%;
-        height: 320px;
-        width: 320px;
         box-sizing: border-box;
-        padding: 180px 10px 0 10px;
+        width: 380px;
+        background-image: url('../../../public/images/lable.png');
+        background-size: 100% 100%;
+        padding: 20px 20px 20px 40px;
 
         .people-img {
-          width: 100px;
-          height: 100px;
+          width: 80px;
+          height: 80px;
           margin-right: 10px;
+          margin-left: 15px;
+          margin-top: 15px;
 
           img {
             width: 100%;
+            border-radius: 50%;
           }
         }
 
@@ -78,19 +106,20 @@ export default {
           .name {
             font-size: 18px;
             font-weight: bold;
-            color: #666;
+            // color: #666;
+            color: #c6ddfe;
             margin-top: 20px;
           }
 
           .detail {
             font-size: 14px;
-            color: #666;
+            color: #deebfd;
             margin-top: 5px;
           }
 
           .time {
             font-size: 12px;
-            color: #666;
+            color: #deebfd;
             margin-top: 5px;
           }
         }
@@ -100,30 +129,26 @@ export default {
         position: absolute;
         top: 110px;
         right: 0;
-        background-image: url('../../assets/images/circle_1.png');
-        background-size: 100% 100%;
 
         .btn {
-          // float: right;
           text-align: center;
-          // background-color: #FFF;
           height: 80px;
           width: 80px;
           border-radius: 50%;
-          // border: 1px solid #f5f5f5;
           box-sizing: border-box;
           padding: 5px;
           padding-top: 14px;
 
           i {
-            color: #fff;
             font-size: 30px;
-            // color: #ea6f5a;
+            font-weight: bolder;
+            color: #ea6f5a;
           }
 
           p {
             font-size: 12px;
-            color: #fff;
+            font-weight: bolder;
+            color: #ea6f5a;
           }
         }
       }

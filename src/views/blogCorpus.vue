@@ -8,8 +8,8 @@
             <div class="left">
               <img src="@/assets/images/book3.png" />
               <div class="nameDetail">
-                <p class="fir">文集的名字</p>
-                <p class="sen">123人关注</p>
+                <p class="fir">{{ corpusName }}</p>
+                <p class="sen">{{ payCorpus }}人关注</p>
               </div>
             </div>
             <div class="right">
@@ -17,40 +17,18 @@
             </div>
           </div>
           <div class="artical-list">
-            <div class="book-unit">
+            <div
+              class="book-unit"
+              v-for="(item, index) in corpusArticalList"
+              :key="index"
+              @click="handleClick(item.id)"
+            >
               <div class="left">
                 <i class="zyjFamily">&#xe615;</i>
-                <span>文章的名字</span>
+                <span>{{ item.articleName }}</span>
               </div>
               <div class="right">
-                <span>2019-00-00 00:00:00</span>
-              </div>
-            </div>
-            <div class="book-unit">
-              <div class="left">
-                <i class="zyjFamily">&#xe615;</i>
-                <span>文章的名字</span>
-              </div>
-              <div class="right">
-                <span>2019-00-00 00:00:00</span>
-              </div>
-            </div>
-            <div class="book-unit">
-              <div class="left">
-                <i class="zyjFamily">&#xe615;</i>
-                <span>文章的名字</span>
-              </div>
-              <div class="right">
-                <span>2019-00-00 00:00:00</span>
-              </div>
-            </div>
-            <div class="book-unit">
-              <div class="left">
-                <i class="zyjFamily">&#xe615;</i>
-                <span>文章的名字</span>
-              </div>
-              <div class="right">
-                <span>2019-00-00 00:00:00</span>
+                <span>{{ item.articleCreateTime }}</span>
               </div>
             </div>
           </div>
@@ -63,28 +41,16 @@
       <div class="blog-corright fr">
         <div class="blog-author">
           <div class="author-top">
-            <img src="../assets/images/headPhoto.png" />
+            <img :src="imgSrc" />
             <div class="author-area">
               <div class="areacon">
-                <p class="author">作者名字</p>
+                <p class="author">{{ theAuthor }}</p>
                 <button class="add-guanzhu">+关注</button>
               </div>
               <p class="how-many">发布99篇文章，99文集</p>
             </div>
           </div>
           <div class="line-works"></div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
-            <p class="work-read">阅读量111222</p>
-          </div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
-            <p class="work-read">阅读量111222</p>
-          </div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
-            <p class="work-read">阅读量111222</p>
-          </div>
           <div class="works">
             <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
             <p class="work-read">阅读量111222</p>
@@ -105,13 +71,67 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 import blogHead from "@/components/blogHead.vue";
 import blogFoot from "@/components/blogFoot.vue";
 export default {
   name: "blogCorpus",
+  data() {
+    return {
+      corpusArticalList: [],
+      corpusName: "",
+      payCorpus: ""
+    };
+  },
   components: {
     blogHead,
     blogFoot
+  },
+  methods: {
+    handleClick(id) {
+      console.log("momo" + id);
+      this.$router.push({
+        // name: "newWork",
+        path: "/blogArticle" + "/" + id,
+        params: {
+          articleId: id
+        }
+      });
+    }
+  },
+  created() {
+    // 当前文集
+    let data = {
+      id: this.$route.params.corpusId
+    };
+    get("/tCorpus/selectOne", data)
+      .then(resp => {
+        console.log(resp);
+        this.corpusName = resp.data.corpusName;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    // 当前文集中的文章
+    let article = {
+      page: 1,
+      size: 6,
+      articleCorpusId: this.$route.params.corpusId
+    };
+    get("/tArticle/findAllArticle", article)
+      .then(resp => {
+        console.log(resp);
+        for (let i = 0; i < resp.data.data.list.length; i++) {
+          this.corpusArticalList.unshift({
+            id: resp.data.data.list[i].id,
+            articleName: resp.data.data.list[i].articleName,
+            articleCreateTime: resp.data.data.list[i].articleCreateTime
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>

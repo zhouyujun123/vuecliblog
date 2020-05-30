@@ -48,7 +48,7 @@ export default {
   name: "writeLeft",
   data() {
     return {
-      imgSrc: ""
+      imgSrc: "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d"
     };
   },
   methods: {

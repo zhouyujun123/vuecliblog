@@ -57,7 +57,8 @@ export default {
   data() {
     return {
       years: "",
-      imgSrc: "",
+      imgSrc:
+        "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d",
       errorStr: "",
       inputName: "",
       inputIntrduct: "",
@@ -200,6 +201,7 @@ export default {
         img {
           width: 100%;
           height: 100%;
+          border-radius: 50%;
         }
       }
     }

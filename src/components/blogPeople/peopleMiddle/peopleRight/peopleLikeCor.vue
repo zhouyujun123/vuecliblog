@@ -11,22 +11,25 @@
           </p>
         </div>
       </div>
-      <div class="right">
-        <button class="get">取消关注</button>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "peopleLikeCor"
+  name: "peopleLikeCor",
+  props: {
+    peopleId: String
+  },
+  created() {
+    console.log(this.peopleId);
+  }
 };
 </script>
 
 <style lang="stylus" scoped>
 .mineLike {
-  padding: 10px;
+  // padding: 10px;
 
   .corpus {
     display: flex;

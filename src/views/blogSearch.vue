@@ -50,7 +50,7 @@ import searchUsers from "@/components/blogSearch/searchUsers.vue";
 import searchWorks from "@/components/blogSearch/searchWorks.vue";
 import searchCorpus from "@/components/blogSearch/searchCorpus.vue";
 export default {
-  inject: ["reload"],
+  // inject: ["reload"],
   name: "blogSearch",
   data() {
     return {

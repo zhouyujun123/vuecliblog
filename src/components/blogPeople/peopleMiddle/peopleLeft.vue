@@ -2,56 +2,59 @@
   <div class="peopleMiddle">
     <div class="counter">
       <div class="peopleLeft">
-        <router-link
-          to="/blogPeople/peopleCorpus"
-          tag="div"
-          :class="{ 'activePeople': $route.meta.active === '/blogPeople/peopleCorpus' }"
-        >
-          <div class="option">
-            <div class="bgcImg">
-              <i class="zyjFamily">&#xe62a;</i>
-              <span>他的文集</span>
-            </div>
+        <div class="option" @click.prevent="comName = 'peopleCorpus'" @click="activePeople(1)">
+          <div class="bgcImg" :class="{ 'activePeople':changeActive == 1  }">
+            <i class="zyjFamily">&#xe62d;</i>
+            <span>作者文集</span>
           </div>
-        </router-link>
-        <router-link
-          to="/blogPeople/peopleArtical"
-          tag="div"
-          :class="{ 'activePeople': $route.meta.active === '/blogPeople/peopleArtical' }"
-        >
-          <div class="option">
-            <div class="bgcImg">
-              <i class="zyjFamily">&#xe62a;</i>
-              <span>他的文章</span>
-            </div>
+        </div>
+        <div class="option" @click.prevent="comName = 'peopleArtical'" @click="activePeople(2)">
+          <div class="bgcImg" :class="{ 'activePeople':changeActive == 2  }">
+            <i class="zyjFamily">&#xe610;</i>
+            <span>作者文章</span>
           </div>
-        </router-link>
-        <router-link
-          to="/blogPeople/peopleLike"
-          tag="div"
-          :class="{ 'activePeople': $route.meta.active === '/blogPeople/peopleLike' }"
-        >
-          <div class="option">
-            <div class="bgcImg">
-              <i class="zyjFamily">&#xe62a;</i>
-              <span>他的关注</span>
-            </div>
+        </div>
+        <div class="option" @click.prevent="comName = 'peopleLike'" @click="activePeople(3)">
+          <div class="bgcImg" :class="{ 'activePeople':changeActive == 3  }">
+            <i class="zyjFamily">&#xe62a;</i>
+            <span>作者关注</span>
           </div>
-        </router-link>
+        </div>
       </div>
       <div class="peopleRight">
-        <transition mode="out-in">
-          <router-view></router-view>
-        </transition>
+        <component :is="comName" :peopleId="thePeopleId"></component>
       </div>
     </div>
   </div>
 </template>
 <script>
+import peopleCorpus from "@/components/blogPeople/peopleMiddle/peopleRight/peopleCorpus.vue";
+import peopleArtical from "@/components/blogPeople/peopleMiddle/peopleRight/peopleArtical.vue";
+import peopleLike from "@/components/blogPeople/peopleMiddle/peopleRight/peopleLike.vue";
 export default {
   name: "peopleLeft",
   data() {
-    return {};
+    return {
+      comName: "peopleCorpus",
+      changeActive: 1,
+      thePeopleId: this.LeftUserId
+    };
+  },
+  props: {
+    LeftUserId: String
+  },
+  components: {
+    peopleCorpus,
+    peopleArtical,
+    peopleLike
+  },
+  methods: {
+    activePeople(index) {
+      this.changeActive = index;
+    }
+  },
+  created() {
+    console.log(this.LeftUserId);
   }
 };
 </script>
@@ -64,41 +67,45 @@ export default {
 
   .peopleLeft {
     width: 320px;
-    padding-top: 200px;
 
+    // padding-top: 200px;
     .option {
       margin-bottom: 15px;
 
       span {
-        font-size: 18px;
+        font-size: 16px;
+        color: #666;
       }
 
       i {
         font-size: 16px;
         margin-right: 5px;
         font-weight: bold;
+        color: #ea6f5a;
       }
 
       .bgcImg {
         margin: 0 auto;
-        margin-top: 20px;
-        width: 180px;
+        margin-top: 10px;
+        width: 200px;
         height: 60px;
         box-sizing: border-box;
-        padding-left: 35px;
-        padding-top: 20px;
-        background-image: url('../../../assets/images/biaoqian.png');
-        background-size: 100% 100%;
+        padding-left: 50px;
+        padding-top: 16px;
       }
     }
 
     .activePeople {
+      background-image: url('../../../../public/images/btnO.png');
+      background-size: 100% 100%;
+
       span {
-        color: #fff;
+        color: #f87617;
+        font-weight: bold;
       }
 
       i {
-        color: #fff;
+        color: #f87617;
       }
     }
   }
@@ -106,8 +113,6 @@ export default {
   .peopleRight {
     width: 630px;
     box-sizing: border-box;
-    padding: 10px;
-    padding-top: 50px;
   }
 }
 </style>

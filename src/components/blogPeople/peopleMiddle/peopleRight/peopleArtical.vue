@@ -1,19 +1,19 @@
 <template>
   <div class="peopleArtical">
-    <div class="article">
+    <div class="article" v-for="(item, index) in articalList" :key="index">
       <div class="top">
-        <span>time</span>
+        <span>{{ item.articleCreateTime }}</span>
       </div>
-      <p class="articleName">jkjkjk</p>
-      <p class="articleCon">ghjgjh</p>
+      <p class="articleName">{{ item.articleName }}</p>
+      <p class="articleCon">{{ item.articleIntroduct }}</p>
       <div class="foot">
         <div class="cell">
           <i class="zyjFamily">&#xe60c;</i>
-          <span>456</span>
+          <span>{{ item.peopleLike }}</span>
         </div>
         <div class="cell">
           <i class="zyjFamily">&#xe60a;</i>
-          <span>dhf</span>
+          <span>{{ item.comment }}</span>
         </div>
       </div>
     </div>
@@ -21,8 +21,40 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 export default {
-  name: "peopleArtical"
+  name: "peopleArtical",
+  props: {
+    peopleId: String
+  },
+  data() {
+    return {
+      articalList: []
+    };
+  },
+  created() {
+    console.log(this.peopleId);
+    let data = {
+      page: 1,
+      size: 6,
+      userId: this.peopleId
+    };
+    get("/tArticle/findAllArticle", data)
+      .then(resp => {
+        console.log(resp);
+        for (let i = 0; i < resp.data.data.list.length; i++) {
+          this.articalList.unshift({
+            id: resp.data.data.list[i].id,
+            articleName: resp.data.data.list[i].articleName,
+            articleCreateTime: resp.data.data.list[i].articleCreateTime,
+            articleIntroduct: resp.data.data.list[i].articleIntroduct
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 };
 </script>
 

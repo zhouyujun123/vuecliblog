@@ -74,7 +74,6 @@
 <script>
 import { get, post } from "@/axios/axios.js";
 let myData = new Date();
-let couId = 0;
 export default {
   inject: ["reload"],
   name: "collectedWorks",
@@ -93,7 +92,8 @@ export default {
       pageSize: 6,
       currentPage: 1,
       dialogFormVisible: false,
-      formName: ""
+      formName: "",
+      colId: ""
     };
   },
   created: function() {
@@ -110,7 +110,6 @@ export default {
     },
     // 添加文集
     addNewWork() {
-      console.log(1);
       if (this.newWork === "") {
         alert("请输入新建的文集名称！");
       } else {
@@ -176,15 +175,13 @@ export default {
     // 修改文集标题
     changeCorpus(id, newWork) {
       this.dialogFormVisible = true;
-      console.log(id, newWork);
       this.formName = newWork;
-      couId = id;
-      console.log(couId);
+      this.colId = id;
     },
     pushOK() {
-      console.log(couId);
+      console.log();
       let data = {
-        id: couId,
+        id: this.colId,
         corpusName: this.formName
       };
       post("/tCorpus/updateCorpus", data)

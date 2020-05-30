@@ -4,8 +4,8 @@
     <div class="blog-article">
       <div class="blog-artleft fl">
         <div class="blog-view">
-          <p class="art-name">我的一天</p>
-          <p class="art-head">发布时间：2019-00-00 作者：zyj</p>
+          <p class="art-name">{{ thisArticalName }}</p>
+          <p class="art-head">发布时间：{{ thisArticalCreatTime }}</p>
           <mavon-editor v-html="value" />
           <div class="art-bom">
             <span>
@@ -87,30 +87,23 @@
       <div class="blog-artright fr">
         <div class="blog-author">
           <div class="author-top">
-            <img src="../assets/images/headPhoto.png" />
+            <img :src="imgSrc" />
             <div class="author-area">
               <div class="areacon">
-                <p class="author">作者名字</p>
+                <p class="author">{{ thisArticalAuthor }}</p>
                 <button class="add-guanzhu">+关注</button>
               </div>
               <p class="how-many">发布99篇文章，99文集</p>
             </div>
           </div>
           <div class="line-works"></div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
-            <p class="work-read">阅读量111222</p>
-          </div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
-            <p class="work-read">阅读量111222</p>
-          </div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
-            <p class="work-read">阅读量111222</p>
-          </div>
-          <div class="works">
-            <p class="work-name">文章题目题目文章题目题目文章题目文章题目题目文章题目题目题目文章题目题目文章题目题目</p>
+          <div
+            class="works"
+            v-for="(item, index) in articleList"
+            :key="index"
+            @click="handleClick(item.id)"
+          >
+            <p class="work-name">{{ item.articleName }}</p>
             <p class="work-read">阅读量111222</p>
           </div>
         </div>
@@ -141,12 +134,14 @@
 </template>
 
 <script>
+import { get } from "@/axios/axios.js";
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 import blogHead from "@/components/blogHead.vue";
 import blogFoot from "@/components/blogFoot.vue";
 
 export default {
+  inject: ["reload"],
   name: "blogArticle",
   components: {
     blogHead,
@@ -155,12 +150,73 @@ export default {
   },
   data() {
     return {
-      value: `<blockquote>
-									<p>你好</p>
-									</blockquote>
-									<p><code>java</code></p>`,
-      defaultData: "preview"
+      articleList: [],
+      value: ``,
+      defaultData: "preview",
+      thisArticalName: "",
+      thisArticalCreatTime: "",
+      thisArticalAuthor: "",
+      imgSrc: "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d"
     };
+  },
+  methods: {
+    handleClick(id) {
+      console.log("momo" + id);
+      this.$router.push({
+        // name: "newWork",
+        path: "/blogArticle" + "/" + id,
+        params: {
+          articleId: id
+        }
+      });
+      this.reload();
+    }
+  },
+  created() {
+    // 文章
+    get("/tArticle/selectOne", { id: this.$route.params.articleId })
+      .then(resp => {
+        console.log(resp);
+        this.thisArticalName = resp.data.articleName;
+        this.thisArticalCreatTime = resp.data.articleCreateTime;
+        this.thisArticalAuthor = resp.data.userId;
+        this.value = resp.data.articleContent;
+        // 获取该文章作者头像
+        let data = {
+          id: this.thisArticalAuthor
+        };
+        get("/getUserInfo/" + this.thisArticalAuthor, data)
+          .then(resp => {
+            console.log(resp);
+            this.imgSrc = resp.data.data.headImg;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        // 获取该文章作者其他文章
+        let findArtical = {
+          userId: this.thisArticalAuthor,
+          page: 0,
+          size: 6,
+          articleState: 1
+        };
+        get("/tArticle/findAllArticle", findArtical)
+          .then(resp => {
+            console.log(resp);
+            for (let i = 0; i < resp.data.data.list.length; i++) {
+              this.articleList.unshift({
+                id: resp.data.data.list[i].id,
+                articleName: resp.data.data.list[i].articleName
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>

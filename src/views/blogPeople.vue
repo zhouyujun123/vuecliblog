@@ -1,8 +1,8 @@
 <template>
   <div>
     <blog-head></blog-head>
-    <people-head></people-head>
-    <people-left></people-left>
+    <people-head :peopleUserId="peopleUserId"></people-head>
+    <people-left :LeftUserId="peopleUserId"></people-left>
     <blog-foot></blog-foot>
   </div>
 </template>
@@ -20,7 +20,9 @@ export default {
     blogHead
   },
   data() {
-    return {};
+    return {
+      peopleUserId: this.$route.params.peopleId
+    };
   }
 };
 </script>

@@ -24,7 +24,7 @@
               </p>
             </div>
             <div class="article_right fr">
-              <img src="../assets/images/pig.jpg" />
+              <img src="../assets/images/jiazhuang.jpg" />
             </div>
           </div>
           <!-- </router-link> -->
@@ -51,15 +51,19 @@
                 <i class="layui-icon layui-icon-refresh"></i>换一换
               </div>
             </div>
-            <div class="middle">
+            <div
+              class="middle"
+              v-for="(item, index) in authorList"
+              :key="index"
+            >
               <div class="author_l fl">
-                <img src="../assets/images/headPhoto.png" />
+                <img :src="item.imgSrc" />
               </div>
               <div class="author_m fl">
-                <p>123</p>
+                <p>{{ item.author }}</p>
                 <p>
                   有
-                  <span>123</span>人已关注哦
+                  <span>{{ item.peoplePay }}</span>人已关注哦
                 </p>
               </div>
               <div class="author_r fl">
@@ -94,7 +98,7 @@ export default {
   data() {
     return {
       articleList: [],
-      // authorList: [],
+      authorList: [],
       // 模拟页码
       currentPage: 1,
       search: "",
@@ -113,7 +117,6 @@ export default {
         // name: "newWork",
         path: "/blogArticle" + "/" + id,
         params: {
-          colId: "0",
           articleId: id
         }
       });
@@ -158,29 +161,30 @@ export default {
     },
     showAuthor() {
       console.log("显示作者");
-      // let data = {};
-      // get("/tArticle/findAllArticle", data)
-      //   .then(resp => {
-      //     console.log(resp);
-      //     this.total = resp.data.data.total;
-      //     console.log(this.total % 6);
-      //     for (let i = 0; i < resp.data.data.list.length; i++) {
-      //       this.articleList.push({
-      //         articleId: resp.data.data.list[i].articleId,
-      //         author: resp.data.data.list[i].articleAuthor,
-      //         articleName: resp.data.data.list[i].articleName,
-      //         upTime: resp.data.data.list[i].articleCreateTime,
-      //         articleCon: resp.data.data.list[i].articleIntroduct
-      //       });
-      //     }
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
+      let data = {
+        page: 1,
+        size: 6,
+        type: 0,
+        text: ""
+      };
+      get("/findLike", data)
+        .then(resp => {
+          console.log(resp);
+          for (let i = 0; i < resp.data.data.list.length; i++) {
+            this.authorList.push({
+              author: resp.data.data.list[i].nickName,
+              imgSrc: resp.data.data.list[i].headImg
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   created() {
     this.showTable();
+    this.showAuthor();
   }
 };
 </script>

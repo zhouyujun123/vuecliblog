@@ -171,9 +171,9 @@ export default {
         alert("验证码不能为空！");
       } else {
         let data = {
-          username: this.registerName,
-          password: this.registerPSW,
-          mailbox: this.emali,
+          userName: this.registerName,
+          userPsw: this.registerPSW,
+          userEmail: this.emali,
           captcha: this.captcha
         };
         post("/registered", data)

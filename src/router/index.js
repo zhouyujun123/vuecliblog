@@ -61,7 +61,7 @@ const routes = [
     }
   },
   {
-    path: "/blogCorpus",
+    path: "/blogCorpus/:corpusId",
     name: "blogCorpus",
     component: () => import("../views/blogCorpus.vue"),
     meta: {
@@ -226,51 +226,51 @@ const routes = [
     ]
   },
   {
-    path: "/blogPeople",
+    path: "/blogPeople/:peopleId",
     name: "blogPeople",
     component: () => import("../views/blogPeople.vue"),
     meta: {
       title: "用户主页"
-    },
-    redirect: "/blogPeople/peopleCorpus",
-    children: [
-      {
-        path: "peopleCorpus",
-        name: "peopleCorpus",
-        component: () =>
-          import(
-            "../components/blogPeople/peopleMiddle/peopleRight/peopleCorpus.vue"
-          ),
-        meta: {
-          active: "/blogPeople/peopleCorpus",
-          title: "用户文集"
-        }
-      },
-      {
-        path: "peopleArtical",
-        name: "peopleArtical",
-        component: () =>
-          import(
-            "../components/blogPeople/peopleMiddle/peopleRight/peopleArtical.vue"
-          ),
-        meta: {
-          active: "/blogPeople/peopleArtical",
-          title: "用户文章"
-        }
-      },
-      {
-        path: "peopleLike",
-        name: "peopleLike",
-        component: () =>
-          import(
-            "../components/blogPeople/peopleMiddle/peopleRight/peopleLike.vue"
-          ),
-        meta: {
-          active: "/blogPeople/peopleLike",
-          title: "用户喜欢"
-        }
-      }
-    ]
+    }
+    // redirect: "/blogPeople/peopleCorpus",
+    // children: [
+    //   {
+    //     path: "peopleCorpus/:peopleId",
+    //     name: "peopleCorpus",
+    //     component: () =>
+    //       import(
+    //         "../components/blogPeople/peopleMiddle/peopleRight/peopleCorpus.vue"
+    //       ),
+    //     meta: {
+    //       active: "/blogPeople/peopleCorpus/:peopleId",
+    //       title: "用户文集"
+    //     }
+    //   },
+    //   {
+    //     path: "peopleArtical/:peopleId",
+    //     name: "peopleArtical",
+    //     component: () =>
+    //       import(
+    //         "../components/blogPeople/peopleMiddle/peopleRight/peopleArtical.vue"
+    //       ),
+    //     meta: {
+    //       active: "/blogPeople/peopleArtical/:peopleId",
+    //       title: "用户文章"
+    //     }
+    //   },
+    //   {
+    //     path: "peopleLike/:peopleId",
+    //     name: "peopleLike",
+    //     component: () =>
+    //       import(
+    //         "../components/blogPeople/peopleMiddle/peopleRight/peopleLike.vue"
+    //       ),
+    //     meta: {
+    //       active: "/blogPeople/peopleLike/:peopleId",
+    //       title: "用户喜欢"
+    //     }
+    //   }
+    // ]
   }
 ];
 
@@ -303,11 +303,6 @@ router.beforeEach((to, from, next) => {
   // if (to.path === "/reset") return next();
   // if (to.path === "/resetEmail") return next();
   // if (to.path === "/blogArticle/:articleId") return next();
-  // if (to.path === "/blogCorpus") return next();
-  // if (to.path === "/blogSearch/searchUsers") return next();
-  // if (to.path === "/blogSearch/searchWorks") return next();
-  // if (to.path === "/blogSearch/searchCorpus") return next();
-  // if (to.path === "/blogPeople") return next();
 
   //判断其他页面是否有token
   const token = localStorage.getItem("Authorization");
