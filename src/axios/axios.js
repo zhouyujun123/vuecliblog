@@ -2,6 +2,7 @@
 import Vue from "vue";
 import axiox from "axios";
 import qs from "qs";
+import md5 from "js-md5";
 Vue.prototype.$qs = qs;
 // Vue.prototype.$axios = axios;
 
@@ -91,4 +92,26 @@ export function del(url) {
 
 export function put(url, data) {
   return instance.put(url, data);
+}
+
+// 生成sign
+export function findSign(params, kAppKey, kAppSecret) {
+  if (typeof params == "string") {
+    return paramsStrSort(params, kAppKey, kAppSecret);
+  } else if (typeof params == "object") {
+    var arr = [];
+    for (var i in params) {
+      arr.push(i + "=" + params[i]);
+    }
+    return paramsStrSort(arr.join("&"), kAppKey, kAppSecret);
+  }
+}
+function paramsStrSort(paramsStr, kAppKey, kAppSecret) {
+  var url = paramsStr + "&appKey=" + kAppKey;
+  var urlStr = url
+    .split("&")
+    .sort()
+    .join("&");
+  var newUrl = urlStr + "&key=" + kAppSecret;
+  return md5(newUrl);
 }

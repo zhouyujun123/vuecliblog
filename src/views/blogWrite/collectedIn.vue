@@ -36,18 +36,19 @@
                 </div>
               </td>
               <td>{{ item.workTime }}</td>
-              <td :class="[item.workState ? 'activeColor' : '']">
-                {{ item.workState ? "已发布" : "未发布" }}
-              </td>
+              <td
+                :class="[item.workState ? 'activeColor' : '']"
+              >{{ item.workState ? "已发布" : "未发布" }}</td>
               <td>
-                <i
-                  class="zyjFamily deleteIcon"
-                  @click.stop="handleDeleteItem(item.id)"
-                  >&#xe614;</i
-                >
+                <i class="zyjFamily deleteIcon" @click.stop="handleDeleteItem(item.id)">&#xe614;</i>
               </td>
             </tr>
           </table>
+
+          <div class="noContent">
+            <img src="@/assets/images/nogoodBuy.png" />
+            <p>还没有任何作品哦~~~</p>
+          </div>
         </div>
         <el-pagination
           @size-change="handleSizeChange"
@@ -306,6 +307,20 @@ export default {
         &:hover {
           background-color: #fafafa;
         }
+      }
+    }
+
+    .noContent {
+      padding-top: 120px;
+      text-align: center;
+
+      img {
+        width: 160px;
+      }
+
+      p {
+        font-size: 12px;
+        color: #ccc;
       }
     }
   }

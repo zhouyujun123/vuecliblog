@@ -21,11 +21,11 @@
         </div>
         <div class="blog-comment">
           <div class="Leave-comment">
-            <img src="../assets/images/headPhoto2.png" />
+            <!-- <img src="../assets/images/headPhoto2.png" /> -->
             <div class="my-comment">
-              <textarea placeholder="写下你的评论..."></textarea>
+              <textarea placeholder="写下你的评论..." v-modle="myComment"></textarea>
               <div class="bottom-mycon">
-                <button class="push">发布</button>
+                <button class="push" @click="pushOut()">发布</button>......
                 <button class="over">取消</button>
               </div>
             </div>
@@ -163,7 +163,8 @@ export default {
       thisArticalAuthor: "",
       imgSrc:
         "http://115.28.105.227:8888/blog/d67874a2e425bf6c330898f9db68812d",
-      isLoading: true
+      isLoading: true,
+      myComment: ""
     };
   },
   methods: {
@@ -177,6 +178,18 @@ export default {
         }
       });
       this.reload();
+    },
+    pushOut() {
+      let data = {};
+      get("/tComment/addComment", data)
+        .then(resp => {
+          console.log(resp);
+          this.imgSrc = resp.data.data.headImg;
+          this.isLoading = false;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   created() {

@@ -78,7 +78,7 @@
 
 <script>
 import { mapMutations } from "vuex";
-import { get, post } from "@/axios/axios.js";
+import { get, post, findSign } from "@/axios/axios.js";
 export default {
   name: "loginRegister",
   data() {
@@ -108,8 +108,10 @@ export default {
       } else {
         let data = {
           username: this.name,
-          password: this.password
+          password: this.password,
+          sign: findSign(data, "ymtzyj", "ymtzyj")
         };
+        console.log(findSign(data, "ymtzyj", "ymtzyj"));
         post("/login", data)
           .then(resp => {
             console.log(resp);

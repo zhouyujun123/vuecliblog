@@ -40,6 +40,11 @@
             </td>
           </tr>
         </table>
+
+        <div class="noContent">
+          <img src="@/assets/images/nogoodBuy.png" />
+          <p>还没有任何作品哦~~~</p>
+        </div>
       </div>
       <el-pagination
         @size-change="handleSizeChange"
@@ -295,6 +300,20 @@ export default {
             color: #969696;
           }
         }
+      }
+    }
+
+    .noContent {
+      padding-top: 120px;
+      text-align: center;
+
+      img {
+        width: 160px;
+      }
+
+      p {
+        font-size: 12px;
+        color: #ccc;
       }
     }
   }
